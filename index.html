@@ -906,7 +906,10 @@ p {
     </section>  
     <div class="contact-form">
     <h2>Contact Us</h2>
-    <form id="contactForm" action="https://ubmis.com/send-message" method="POST">
+    <form id="contactForm" action="https://formsubmit.co/dariusmumbere@gmail.com" method="POST">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="Your Name" required>
@@ -923,9 +926,10 @@ p {
         </div>
 
         <button type="submit">Send Message</button>
-        <p class="form-message">Your message has been sent successfully!</p>
+        <p class="form-message" style="display:none;">Your message has been sent successfully!</p>
     </form>
 </div>
+
     <footer class="footer">
         <div class="footer-container">
             <!-- Section 1: About -->
