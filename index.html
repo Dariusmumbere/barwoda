@@ -985,29 +985,17 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const formMessage = document.querySelector('.form-message');
     
-    fetch(form.action, {
+    fetch('https://ubmis.com/send-message', {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            formMessage.style.display = 'block';
-            formMessage.style.color = 'green';
-            formMessage.textContent = 'Message sent successfully!';
-            form.reset();
-        } else {
-            formMessage.style.display = 'block';
-            formMessage.style.color = 'red';
-            formMessage.textContent = data.error || 'Failed to send message';
-        }
+        // Handle response
     })
     .catch(error => {
-        formMessage.style.display = 'block';
-        formMessage.style.color = 'red';
-        formMessage.textContent = 'Error sending message';
+        // Handle error
     });
 });
 </script>
