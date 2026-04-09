@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livestock & Poultry Farming — BARWODA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#050c0a;--surface:#0a1612;--surface2:#0f1f18;--accent:#c8f06e;--accent2:#5be0bc;--accent3:#ff7b54;--text:#eff5ee;--text-muted:#7a9e8e;--border:rgba(200,240,110,0.1);--border2:rgba(200,240,110,0.2);--r:2px;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+  body{font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;}
+  #cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
+  #cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(200,240,110,0.5);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.18s ease;}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(200,240,110,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,240,110,0.025) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 56px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,12,10,0.93);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:var(--text);text-decoration:none;}.nav-logo em{font-style:italic;color:var(--accent);}
+  .nav-back{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}.nav-back:hover{color:var(--accent);}
+  .nav-program-title{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;}
+  .program-hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;padding:120px 56px 80px;overflow:hidden;z-index:1;}
+  .program-hero-bg{position:absolute;inset:0;background-image:url('livestock.jpg'),linear-gradient(135deg,#0c1a0a,#050c0a);background-size:cover;background-position:center;}
+  .program-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,12,10,0.5) 0%,rgba(5,12,10,0.95) 100%);}
+  .hero-content{position:relative;z-index:2;max-width:760px;}
+  .hero-breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);margin-bottom:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+  .hero-breadcrumb a{color:var(--text-muted);text-decoration:none;}.hero-breadcrumb a:hover{color:var(--accent);}.hero-breadcrumb span{color:var(--accent);}
+  .program-icon-large{width:72px;height:72px;background:rgba(200,240,110,0.1);border:1px solid var(--border2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:24px;}
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(200,240,110,0.1);border:1px solid var(--border2);padding:6px 14px;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;border-radius:var(--r);}
+  .program-hero h1{font-family:'Fraunces',serif;font-size:clamp(44px,6vw,80px);font-weight:700;line-height:1.0;letter-spacing:-2px;margin-bottom:24px;}
+  .program-hero h1 em{font-style:italic;color:var(--accent);}
+  .program-hero p{font-size:18px;font-weight:300;color:rgba(239,245,238,0.75);line-height:1.75;max-width:520px;}
+  .hero-stats-row{display:flex;gap:1px;margin-top:48px;}
+  .hstat{background:rgba(10,22,18,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);padding:20px 28px;}
+  .hstat-num{font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--accent);line-height:1;display:block;}
+  .hstat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;display:block;}
+  .page-content{position:relative;z-index:1;}
+  section{padding:100px 56px;}
+  .section-label{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+  .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+  .section-title{font-family:'Fraunces',serif;font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-1.5px;line-height:1.05;margin-bottom:18px;}
+  .section-title em{font-style:italic;color:var(--accent);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+  .four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;}
+  .detail-card{background:var(--surface);border:1px solid var(--border);padding:36px 32px;transition:all 0.3s;}
+  .detail-card:hover{border-color:var(--border2);transform:translateY(-3px);}
+  .detail-card-icon{font-size:28px;margin-bottom:16px;}
+  .detail-card-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:12px;}
+  .detail-card-text{font-size:15px;color:var(--text-muted);line-height:1.75;font-weight:300;}
+  .feature-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+  .feature-list li{display:flex;align-items:flex-start;gap:14px;font-size:16px;color:var(--text-muted);line-height:1.6;font-weight:300;}
+  .feature-list li::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;margin-top:8px;}
+  .img-block{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);}
+  .img-block img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.85) saturate(0.9);transition:all 0.5s;}
+  .img-block:hover img{filter:brightness(0.95) saturate(1);transform:scale(1.02);}
+  .img-tag{position:absolute;bottom:16px;left:16px;background:rgba(5,12,10,0.85);border:1px solid var(--border2);padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);border-radius:2px;}
+  .impact-band{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .impact-band-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;}
+  .iband-item{padding:48px 36px;background:var(--bg);text-align:center;border-right:1px solid var(--border);}
+  .iband-item:last-child{border-right:none;}
+  .iband-num{font-family:'Fraunces',serif;font-size:52px;font-weight:700;color:var(--accent);display:block;line-height:1;}
+  .iband-label{font-size:13px;color:var(--text-muted);margin-top:8px;display:block;font-weight:500;}
+  .quote-block{background:var(--surface2);border-left:3px solid var(--accent);padding:36px 40px;margin-top:48px;}
+  .quote-text{font-family:'Fraunces',serif;font-size:22px;font-style:italic;font-weight:300;line-height:1.7;color:var(--text);margin-bottom:16px;}
+  .quote-source{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;}
+  /* Farming types grid */
+  .farming-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:48px;}
+  .farming-card{background:var(--surface);border:1px solid var(--border);padding:40px 32px;text-align:center;transition:all 0.35s;position:relative;overflow:hidden;}
+  .farming-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:center;transition:transform 0.4s;}
+  .farming-card:hover::after{transform:scaleX(1);}
+  .farming-card:hover{background:var(--surface2);border-color:var(--border2);}
+  .farming-emoji{font-size:48px;display:block;margin-bottom:20px;}
+  .farming-title{font-family:'Fraunces',serif;font-size:21px;font-weight:700;margin-bottom:12px;}
+  .farming-desc{font-size:15px;color:var(--text-muted);line-height:1.7;font-weight:300;}
+  /* Partners strip */
+  .partners-strip{background:var(--surface2);border:1px solid var(--border);padding:40px 40px;margin-top:48px;}
+  .partners-strip-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:24px;color:var(--accent);}
+  .partner-list{display:flex;flex-wrap:wrap;gap:12px;}
+  .partner-badge{padding:10px 18px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text-muted);border-radius:var(--r);font-weight:500;transition:all 0.2s;}
+  .partner-badge:hover{border-color:var(--border2);color:var(--text);}
+  .page-cta{background:var(--surface);border-top:1px solid var(--border);text-align:center;padding:100px 56px;}
+  .btn-primary{padding:16px 36px;background:var(--accent);color:var(--bg);font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:15px;border:none;border-radius:var(--r);cursor:none;text-decoration:none;display:inline-block;transition:all 0.25s;}
+  .btn-primary:hover{background:#d8ff7a;transform:translateY(-2px);}
+  .btn-ghost{padding:16px 36px;background:transparent;color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-weight:500;font-size:15px;border:1px solid rgba(255,255,255,0.2);border-radius:var(--r);cursor:none;text-decoration:none;display:inline-block;transition:all 0.25s;}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .more-programs{background:var(--bg);border-top:1px solid var(--border);padding:80px 56px;}
+  .prog-nav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:40px;}
+  .prog-nav-card{background:var(--surface);padding:28px 24px;text-decoration:none;display:block;border:1px solid transparent;transition:all 0.3s;}
+  .prog-nav-card:hover{border-color:var(--border);background:var(--surface2);transform:translateY(-3px);}
+  .prog-nav-icon{font-size:24px;margin-bottom:14px;display:block;}
+  .prog-nav-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .prog-nav-desc{font-size:13px;color:var(--text-muted);line-height:1.5;font-weight:300;}
+  footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 56px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+  .footer-copy{font-size:13px;color:var(--text-muted);}.footer-copy em{font-style:normal;color:var(--accent);}
+  .reveal{opacity:0;transform:translateY(28px);transition:all 0.7s ease;}.reveal.visible{opacity:1;transform:translateY(0);}
+  @media(max-width:900px){nav{padding:16px 22px;}section{padding:70px 22px;}.program-hero{padding:100px 22px 60px;}.two-col{grid-template-columns:1fr;gap:40px;}.farming-grid{grid-template-columns:1fr;}.four-col{grid-template-columns:repeat(2,1fr);}.impact-band-inner{grid-template-columns:repeat(2,1fr);}.prog-nav-grid{grid-template-columns:repeat(2,1fr);}footer{padding:30px 22px;flex-direction:column;gap:12px;text-align:center;}.hero-stats-row{flex-wrap:wrap;}.more-programs{padding:60px 22px;}.page-cta{padding:70px 22px;}}
+  @media(max-width:480px){.impact-band-inner{grid-template-columns:1fr;}.prog-nav-grid{grid-template-columns:1fr;}.four-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="cursor"></div><div id="cursor-ring"></div><div class="bg-grid"></div>
+<nav>
+  <a href="index.html" class="nav-logo">BAR<em>WODA</em></a>
+  <span class="nav-program-title">Livestock & Farming</span>
+  <a href="index.html#programs" class="nav-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>All Programs</a>
+</nav>
+<div class="page-content">
+  <div class="program-hero">
+    <div class="program-hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-breadcrumb"><a href="index.html">Home</a> / <a href="index.html#programs">Programs</a> / <span>Livestock & Farming</span></div>
+      <div class="program-icon-large">🐷</div>
+      <div class="hero-tag"><span>●</span> Livelihoods & Agriculture Program</div>
+      <h1>Livestock, Poultry<br>& <em>Beekeeping</em></h1>
+      <p>Sustainable income-generating agriculture for rural households in Kasese District — supported by international partners from Germany, the UK, and the USA committed to rural livelihoods.</p>
+      <div class="hero-stats-row">
+        <div class="hstat"><span class="hstat-num">90</span><span class="hstat-label">Farmers Trained</span></div>
+        <div class="hstat"><span class="hstat-num">4</span><span class="hstat-label">International Partners</span></div>
+        <div class="hstat"><span class="hstat-num">3</span><span class="hstat-label">Farming Types</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="two-col">
+      <div class="reveal">
+        <div class="section-label">Program Overview</div>
+        <h2 class="section-title">Growing food security<br>& <em>rural incomes</em></h2>
+        <p style="font-size:17px;color:var(--text-muted);line-height:1.8;font-weight:300;margin-bottom:24px;">For rural households in Kasese District, livestock and small-scale farming are among the most viable and culturally relevant pathways to economic independence. BARWODA's Livelihoods Program provides training, starter animals, and ongoing support to help members build sustainable farming enterprises.</p>
+        <p style="font-size:17px;color:var(--text-muted);line-height:1.8;font-weight:300;">With 90 members trained and international partners providing critical support, the program has created measurable improvements in household food security and income generation across the district.</p>
+        <div class="quote-block">
+          <div class="quote-text">"When a family has a reliable source of food and income from their own land and animals, they have a foundation for everything else — health, education, dignity."</div>
+          <div class="quote-source">— BARWODA Livelihoods Vision</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="img-block" style="height:420px;">
+          <img src="livestock.jpg" alt="Livestock farming" onerror="this.style.background:'#0a1612';this.style.height='420px'">
+          <div class="img-tag">Pig Farming Program</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="impact-band">
+    <div class="impact-band-inner">
+      <div class="iband-item reveal"><span class="iband-num">90</span><span class="iband-label">Members Trained in Farming</span></div>
+      <div class="iband-item reveal"><span class="iband-num">3</span><span class="iband-label">Livestock & Farming Types</span></div>
+      <div class="iband-item reveal"><span class="iband-num">4+</span><span class="iband-label">International Funding Partners</span></div>
+      <div class="iband-item reveal"><span class="iband-num">Income</span><span class="iband-label">For Rural Households</span></div>
+    </div>
+  </div>
+
+  <!-- Farming types -->
+  <section style="background:var(--surface);border-top:1px solid var(--border);">
+    <div class="section-label reveal">Our Farming Programs</div>
+    <h2 class="section-title reveal">Three paths to<br><em>agricultural income</em></h2>
+    <div class="farming-grid">
+      <div class="farming-card reveal">
+        <span class="farming-emoji">🐷</span>
+        <div class="farming-title">Pig Farming</div>
+        <div class="farming-desc">Pig rearing is one of the most effective livestock programs for rural Uganda — pigs reproduce quickly, require limited space, and can be sold at local markets for significant household income. BARWODA provides training and starter pigs to members.</div>
+      </div>
+      <div class="farming-card reveal">
+        <span class="farming-emoji">🐝</span>
+        <div class="farming-title">Beekeeping</div>
+        <div class="farming-desc">Beekeeping offers a low-cost, high-return agricultural enterprise that also supports environmental conservation through pollination. Members are trained in hive management, honey harvesting, and the production of bee products for local markets.</div>
+      </div>
+      <div class="farming-card reveal">
+        <span class="farming-emoji">🐓</span>
+        <div class="farming-title">Poultry Farming</div>
+        <div class="farming-desc">Chicken and other poultry provide dual income streams through egg sales and meat production. Poultry farming is accessible to households with limited land and can be integrated with existing household food production systems.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners -->
+  <section>
+    <div class="two-col">
+      <div class="reveal">
+        <div class="section-label">International Support</div>
+        <h2 class="section-title">Global partners<br><em>investing locally</em></h2>
+        <p style="font-size:16px;color:var(--text-muted);line-height:1.8;font-weight:300;margin-bottom:28px;">BARWODA's livestock programs are made possible through sustained partnerships with international organisations who recognise the transformative potential of agricultural livelihoods for rural women.</p>
+        <div class="partners-strip">
+          <div class="partners-strip-title">Program Partners</div>
+          <div class="partner-list">
+            <span class="partner-badge">🇩🇪 Marrie-Schlei Verein — Germany</span>
+            <span class="partner-badge">🇬🇧 Oxted One World Group — UK</span>
+            <span class="partner-badge">🇺🇸 1% Fund — New York, USA</span>
+            <span class="partner-badge">🌍 International Christian Service for Africa</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="section-label">Training Components</div>
+        <h2 class="section-title">What our <em>farmers learn</em></h2>
+        <ul class="feature-list" style="margin-top:8px;">
+          <li>Animal husbandry and livestock health management</li>
+          <li>Feeding regimes and nutrition for pigs, poultry, and bees</li>
+          <li>Disease prevention and veterinary first aid</li>
+          <li>Hive construction and honey harvesting techniques</li>
+          <li>Market linkages and pricing strategies</li>
+          <li>Record keeping and basic financial management</li>
+          <li>Integration with household nutrition and food security</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-cta">
+    <div class="section-label" style="justify-content:center;display:inline-flex;">Support This Program</div>
+    <h2 class="section-title" style="max-width:560px;margin:0 auto 18px;">Help 50 more families<br>build <em>sustainable livelihoods</em></h2>
+    <p style="font-size:17px;color:var(--text-muted);max-width:480px;margin:0 auto 40px;font-weight:300;line-height:1.75;">Donations fund starter animals, training materials, veterinary support, and beekeeping equipment — directly improving household income and food security.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="index.html#contact" class="btn-primary">Partner With Us</a>
+      <a href="index.html#programs" class="btn-ghost">Other Programs</a>
+    </div>
+  </div>
+
+  <div class="more-programs">
+    <div class="section-label">Explore More</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.5px;">Other BARWODA <em style="font-style:italic;color:var(--accent)">Programs</em></h3>
+    <div class="prog-nav-grid">
+      <a href="program-environment.html" class="prog-nav-card"><span class="prog-nav-icon">🌱</span><div class="prog-nav-title">Environmental Conservation</div><div class="prog-nav-desc">9,500+ trees planted</div></a>
+      <a href="program-technical-education.html" class="prog-nav-card"><span class="prog-nav-icon">📚</span><div class="prog-nav-title">Technical Education</div><div class="prog-nav-desc">Tailoring & typing for women</div></a>
+      <a href="program-menstrual-health.html" class="prog-nav-card"><span class="prog-nav-icon">🪡</span><div class="prog-nav-title">Menstrual Health</div><div class="prog-nav-desc">Sanitary pad production</div></a>
+      <a href="program-health.html" class="prog-nav-card"><span class="prog-nav-icon">🏥</span><div class="prog-nav-title">Health & MaliMali</div><div class="prog-nav-desc">Community clinic services</div></a>
+    </div>
+  </div>
+</div>
+<footer><div class="footer-copy">© 2026 <em>BARWODA</em> · Bayira Rural Women's Development Association</div><div style="font-size:13px;color:var(--text-muted);">Kasese District, Western Uganda</div></footer>
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',(e)=>{mx=e.clientX;my=e.clientY;cursor.style.left=(mx-5)+'px';cursor.style.top=(my-5)+'px';});
+  (function a(){rx+=(mx-rx-18)*0.12;ry+=(my-ry-18)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+  document.querySelectorAll('a,button,.detail-card,.prog-nav-card,.farming-card').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';});el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';});});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
