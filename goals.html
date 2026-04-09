@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vision &amp; Goals — BARWODA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#050c0a;--surface:#0a1612;--surface2:#0f1f18;
+    --accent:#c8f06e;--accent2:#5be0bc;--accent3:#ff7b54;
+    --text:#eff5ee;--text-muted:#7a9e8e;
+    --border:rgba(200,240,110,0.1);--border2:rgba(200,240,110,0.2);--r:2px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;}
+  #cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
+  #cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(200,240,110,0.5);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.18s ease;}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(200,240,110,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,240,110,0.025) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 56px;display:flex;align-items:center;justify-content:space-between;background:transparent;transition:all 0.4s ease;}
+  nav.scrolled{padding:14px 56px;background:rgba(5,12,10,0.93);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Fraunces',serif;font-weight:700;font-size:22px;letter-spacing:-0.3px;color:var(--text);text-decoration:none;}
+  .nav-logo em{font-style:italic;color:var(--accent);}
+  .nav-links{display:flex;gap:6px;list-style:none;align-items:center;}
+  .nav-item{position:relative;}
+  .nav-item>a{font-size:15px;font-weight:600;color:#d4ead0;text-decoration:none;transition:color 0.2s;padding:8px 14px;display:flex;align-items:center;gap:5px;border-radius:var(--r);}
+  .nav-item>a:hover{color:#fff;background:rgba(200,240,110,0.07);}
+  .nav-item>a.active-link{color:var(--accent);}
+  .nav-item.has-dropdown>a::after{content:'';width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform 0.25s;display:inline-block;}
+  .nav-item.has-dropdown:hover>a::after{transform:rotate(225deg) translateY(-2px);}
+  .dropdown{position:absolute;top:calc(100% + 10px);left:0;background:rgba(8,18,14,0.97);backdrop-filter:blur(20px);border:1px solid var(--border2);min-width:220px;padding:8px 0;border-radius:4px;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px);transition:all 0.25s ease;box-shadow:0 16px 40px rgba(0,0,0,0.5);}
+  .nav-item.has-dropdown:hover .dropdown{opacity:1;visibility:visible;pointer-events:all;transform:translateY(0);}
+  .dropdown a{display:flex;align-items:center;gap:12px;padding:10px 18px;font-size:14px;font-weight:500;color:#b8d4c0;text-decoration:none;transition:all 0.2s;border-left:2px solid transparent;}
+  .dropdown a:hover,.dropdown a.current{color:var(--accent);background:rgba(200,240,110,0.05);border-left-color:var(--accent);}
+  .dropdown-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+  .dropdown-divider{height:1px;background:var(--border);margin:6px 12px;}
+  .dropdown-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);padding:6px 18px 4px;}
+  .nav-cta{padding:9px 22px;background:var(--accent);color:var(--bg);font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:700;border:none;cursor:none;border-radius:var(--r);transition:all 0.25s;margin-left:8px;}
+  .nav-cta:hover{background:#d8ff7a;transform:translateY(-1px);}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none;}
+  .hamburger span{display:block;width:22px;height:1.5px;background:var(--text);transition:all 0.3s;}
+  .mobile-menu{position:fixed;inset:0;background:var(--bg);z-index:999;padding:100px 36px 40px;display:flex;flex-direction:column;gap:28px;transform:translateX(100%);transition:transform 0.4s ease;}
+  .mobile-menu.open{transform:translateX(0);}
+  .mobile-menu a{font-family:'Fraunces',serif;font-size:40px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-1px;border-bottom:1px solid var(--border);padding-bottom:24px;transition:color 0.2s;font-style:italic;}
+  .mobile-menu a:hover{color:var(--accent);}
+
+  /* PAGE HERO */
+  .page-hero{position:relative;min-height:54vh;display:flex;align-items:flex-end;padding:0 56px 72px;overflow:hidden;z-index:1;}
+  .page-hero::before{content:'VISION';position:absolute;bottom:-30px;right:20px;font-family:'Fraunces',serif;font-size:260px;font-weight:700;color:rgba(200,240,110,0.025);line-height:1;pointer-events:none;white-space:nowrap;letter-spacing:-10px;}
+  .breadcrumb{position:absolute;top:120px;left:56px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+  .breadcrumb a{color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb span{color:var(--accent);}
+  .page-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:22px;}
+  .page-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent);}
+  .page-hero h1{font-family:'Fraunces',serif;font-size:clamp(52px,6.5vw,90px);font-weight:700;line-height:0.95;letter-spacing:-2px;margin-bottom:28px;}
+  .page-hero h1 em{font-style:italic;color:var(--accent);}
+  .page-hero-sub{font-size:19px;font-weight:300;color:rgba(239,245,238,0.7);line-height:1.75;max-width:540px;}
+  .section-label{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;}
+  .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+  .section-title{font-family:'Fraunces',serif;font-size:clamp(36px,4vw,58px);font-weight:700;letter-spacing:-1.5px;line-height:1.0;margin-bottom:22px;}
+  .section-title em{font-style:italic;color:var(--accent);}
+  .body-text{font-size:17px;font-weight:300;color:rgba(239,245,238,0.75);line-height:1.8;margin-bottom:22px;}
+
+  /* VISION & GOAL HERO CARDS */
+  .vg-hero{padding:100px 56px;display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+  .vg-card{padding:72px 56px;position:relative;overflow:hidden;transition:all 0.35s;}
+  .vg-card.vision{background:var(--surface);}
+  .vg-card.goal{background:var(--surface2);}
+  .vg-card:hover{transform:translateY(-4px);}
+  .vg-card-bg{position:absolute;top:-20px;right:-10px;font-family:'Fraunces',serif;font-size:160px;font-weight:700;line-height:1;pointer-events:none;opacity:0.04;letter-spacing:-4px;}
+  .vg-icon{font-size:40px;margin-bottom:24px;display:block;}
+  .vg-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:block;}
+  .vg-title{font-family:'Fraunces',serif;font-size:clamp(26px,2.5vw,36px);font-weight:700;line-height:1.1;margin-bottom:22px;letter-spacing:-0.5px;}
+  .vg-text{font-size:17px;color:var(--text-muted);line-height:1.8;font-weight:300;}
+
+  /* STRATEGIC PILLARS */
+  .pillars-section{padding:0 56px 100px;}
+  .pillars-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:60px;}
+  .pillar-card{background:var(--surface);padding:44px 32px;position:relative;overflow:hidden;transition:all 0.35s;border-bottom:2px solid transparent;}
+  .pillar-card:hover{background:var(--surface2);border-bottom-color:var(--accent);}
+  .pillar-number{font-family:'Fraunces',serif;font-size:64px;font-weight:700;color:rgba(200,240,110,0.06);line-height:1;margin-bottom:18px;}
+  .pillar-icon{font-size:26px;margin-bottom:16px;display:block;}
+  .pillar-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:12px;}
+  .pillar-text{font-size:14px;color:var(--text-muted);line-height:1.7;font-weight:300;}
+
+  /* OBJECTIVES DETAIL */
+  .objectives-section{padding:100px 56px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .obj-header{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:72px;}
+  .obj-list{display:flex;flex-direction:column;gap:2px;}
+  .obj-item{display:flex;gap:24px;align-items:flex-start;padding:28px 30px;background:var(--bg);border:1px solid var(--border);transition:all 0.3s;border-radius:var(--r);cursor:default;}
+  .obj-item:hover{border-color:var(--border2);background:rgba(200,240,110,0.02);transform:translateX(4px);}
+  .obj-count{font-family:'Fraunces',serif;font-size:44px;font-weight:700;color:rgba(200,240,110,0.15);line-height:1;flex-shrink:0;width:52px;}
+  .obj-content strong{display:block;font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:8px;}
+  .obj-content p{font-size:15px;color:var(--text-muted);line-height:1.7;font-weight:300;}
+  .obj-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--border);color:var(--accent2);border-radius:var(--r);}
+
+  /* VALUES */
+  .values-section{padding:100px 56px;}
+  .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:60px;}
+  .value-card{padding:44px 36px;background:var(--surface);position:relative;transition:all 0.3s;}
+  .value-card:hover{background:var(--surface2);}
+  .value-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transition:transform 0.4s ease;transform-origin:left;}
+  .value-card:hover::after{transform:scaleX(1);}
+  .value-icon{font-size:28px;margin-bottom:18px;display:block;}
+  .value-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:12px;}
+  .value-text{font-size:15px;color:var(--text-muted);line-height:1.7;font-weight:300;}
+
+  /* IMPACT FORWARD */
+  .impact-forward{padding:100px 56px;background:var(--surface);border-top:1px solid var(--border);}
+  .if-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:center;}
+  .if-stats{display:flex;flex-direction:column;gap:2px;}
+  .if-stat{display:flex;align-items:center;gap:24px;padding:28px 30px;background:var(--bg);border:1px solid var(--border);transition:all 0.3s;}
+  .if-stat:hover{border-color:var(--border2);}
+  .if-num{font-family:'Fraunces',serif;font-size:44px;font-weight:700;color:var(--accent);line-height:1;flex-shrink:0;min-width:90px;}
+  .if-label strong{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:4px;}
+  .if-label p{font-size:14px;color:var(--text-muted);font-weight:300;line-height:1.5;}
+
+  /* CTA */
+  .cta-band{padding:120px 56px;text-align:center;position:relative;overflow:hidden;}
+  .cta-band::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(200,240,110,0.05) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+  .cta-band h2{font-family:'Fraunces',serif;font-size:clamp(40px,5vw,72px);font-weight:700;letter-spacing:-1.5px;line-height:1;margin-bottom:22px;}
+  .cta-band h2 em{font-style:italic;color:var(--accent);}
+  .cta-band p{font-size:18px;color:var(--text-muted);max-width:480px;margin:0 auto 44px;font-weight:300;line-height:1.75;}
+  .cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{padding:16px 36px;background:var(--accent);color:var(--bg);font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:15px;border:none;border-radius:var(--r);cursor:none;text-decoration:none;display:inline-block;transition:all 0.25s;}
+  .btn-primary:hover{background:#d8ff7a;transform:translateY(-2px);}
+  .btn-ghost{padding:16px 36px;background:transparent;color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-weight:500;font-size:15px;border:1px solid rgba(255,255,255,0.2);border-radius:var(--r);cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.25s;}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* FOOTER */
+  footer{background:var(--surface);border-top:1px solid var(--border);padding:60px 56px 36px;position:relative;z-index:1;}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:56px;}
+  .footer-logo{font-family:'Fraunces',serif;font-weight:700;font-size:24px;margin-bottom:14px;display:block;}
+  .footer-logo em{font-style:italic;color:var(--accent);}
+  .footer-desc{font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:22px;max-width:260px;font-weight:300;}
+  .footer-col h4{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:18px;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .footer-col ul a{font-size:14px;color:var(--text-muted);text-decoration:none;transition:color 0.2s;font-weight:300;}
+  .footer-col ul a:hover{color:var(--accent);}
+  .footer-bottom{border-top:1px solid var(--border);padding-top:26px;display:flex;justify-content:space-between;align-items:center;}
+  .footer-copy{font-size:13px;color:var(--text-muted);}
+  .footer-copy em{font-style:normal;color:var(--accent);}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:all 0.7s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  @media(max-width:1100px){.vg-hero{grid-template-columns:1fr;gap:3px;}.pillars-grid{grid-template-columns:repeat(2,1fr);}.obj-header{grid-template-columns:1fr;gap:28px;}.values-grid{grid-template-columns:repeat(2,1fr);}.if-grid{grid-template-columns:1fr;gap:48px;}.footer-top{grid-template-columns:1fr 1fr;gap:36px;}}
+  @media(max-width:768px){nav{padding:16px 22px;}nav.scrolled{padding:12px 22px;}.nav-links,.nav-cta{display:none;}.hamburger{display:flex;}.page-hero{padding:0 22px 60px;}.page-hero::before{display:none;}.breadcrumb{left:22px;}.vg-hero,.pillars-section,.objectives-section,.values-section,.impact-forward,.cta-band{padding-left:22px;padding-right:22px;}.pillars-grid{grid-template-columns:1fr;}.values-grid{grid-template-columns:1fr;}.footer-top{grid-template-columns:1fr;}.footer-bottom{flex-direction:column;gap:10px;text-align:center;}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="bg-grid"></div>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">BAR<em>WODA</em></a>
+  <ul class="nav-links">
+    <li class="nav-item has-dropdown">
+      <a href="index.html#about" class="active-link">About</a>
+      <div class="dropdown">
+        <div class="dropdown-label">Organization</div>
+        <a href="who-we-are.html"><span class="dropdown-icon">🌿</span>Who We Are</a>
+        <a href="vision-goals.html" class="current"><span class="dropdown-icon">🎯</span>Our Vision &amp; Goals</a>
+        <a href="journey.html"><span class="dropdown-icon">📅</span>Our Journey</a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-label">Leadership</div>
+        <a href="founders-members.html"><span class="dropdown-icon">👥</span>Founders &amp; Members</a>
+        <a href="partners.html"><span class="dropdown-icon">🤝</span>Our Partners</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="index.html#impact">Impact</a></li>
+    <li class="nav-item has-dropdown">
+      <a href="index.html#programs">Programs</a>
+      <div class="dropdown">
+        <div class="dropdown-label">Education</div>
+        <a href="index.html#programs"><span class="dropdown-icon">✍️</span>Adult Literacy</a>
+        <a href="index.html#programs"><span class="dropdown-icon">📚</span>Skills &amp; Vocational Training</a>
+        <a href="index.html#programs"><span class="dropdown-icon">👶</span>Children Support</a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-label">Community</div>
+        <a href="index.html#programs"><span class="dropdown-icon">⚖️</span>Human Rights &amp; GBV</a>
+        <a href="index.html#programs"><span class="dropdown-icon">🏥</span>MaliMali Health Centre</a>
+        <a href="index.html#programs"><span class="dropdown-icon">🌱</span>Environmental Conservation</a>
+        <a href="index.html#programs"><span class="dropdown-icon">🐷</span>Livestock &amp; Farming</a>
+        <a href="index.html#programs"><span class="dropdown-icon">🪡</span>Menstrual Health</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="partners.html">Partners</a></li>
+    <li class="nav-item"><a href="https://dariusmumbere.github.io/barwoda/gallery">Gallery</a></li>
+    <li class="nav-item"><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="location.href='index.html#contact'">Support Us</button>
+  <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#about" onclick="closeMobile()">About</a>
+  <a href="index.html#impact" onclick="closeMobile()">Impact</a>
+  <a href="index.html#programs" onclick="closeMobile()">Programs</a>
+  <a href="partners.html" onclick="closeMobile()">Partners</a>
+  <a href="index.html#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / <a href="who-we-are.html">About</a> / <span>Vision &amp; Goals</span></div>
+  <div>
+    <div class="page-eyebrow">Our Direction</div>
+    <h1>Vision &amp; <em>Goals</em></h1>
+    <p class="page-hero-sub">A clear vision rooted in equality. Concrete goals built from community needs. The roadmap BARWODA follows to transform Kasese District — and beyond.</p>
+  </div>
+</div>
+
+<!-- VISION & GOAL HERO CARDS -->
+<div class="vg-hero reveal">
+  <div class="vg-card vision">
+    <div class="vg-card-bg">VISION</div>
+    <span class="vg-icon">🌟</span>
+    <span class="vg-label">Our Vision</span>
+    <div class="vg-title">A knowledgeable, skilled, and empowered women's community in Kasese District</div>
+    <p class="vg-text">…that actively participates in decision-making and drives sustainable development. We envision a future where every woman in Kasese District has the knowledge, skills, and confidence to shape her own life — and contribute meaningfully to her community.</p>
+  </div>
+  <div class="vg-card goal">
+    <div class="vg-card-bg">GOAL</div>
+    <span class="vg-icon">🎯</span>
+    <span class="vg-label">Our Goal</span>
+    <div class="vg-title">Unite and engage rural women in initiatives that transform their lives</div>
+    <p class="vg-text">To improve the standards of living for rural women while fostering a community free from violence — especially domestic violence — for sustainable development. We believe transformation happens when communities are organized, resourced, and empowered to act.</p>
+  </div>
+</div>
+
+<!-- STRATEGIC PILLARS -->
+<div class="pillars-section">
+  <div class="section-label reveal">Strategic Framework</div>
+  <h2 class="section-title reveal">Four pillars of our <em>approach</em></h2>
+  <div class="pillars-grid">
+    <div class="pillar-card reveal">
+      <div class="pillar-number">01</div>
+      <span class="pillar-icon">📖</span>
+      <div class="pillar-title">Education & Literacy</div>
+      <div class="pillar-text">Knowledge is the foundation of all empowerment. We invest in adult literacy, vocational training, and technical education to open doors that were previously closed.</div>
+    </div>
+    <div class="pillar-card reveal">
+      <div class="pillar-number">02</div>
+      <span class="pillar-icon">⚖️</span>
+      <div class="pillar-title">Rights & Safety</div>
+      <div class="pillar-text">Every woman deserves to live free from violence. We build networks of community advocates and provide paralegal support to protect rights and challenge harmful practices.</div>
+    </div>
+    <div class="pillar-card reveal">
+      <div class="pillar-number">03</div>
+      <span class="pillar-icon">🌱</span>
+      <div class="pillar-title">Economic Empowerment</div>
+      <div class="pillar-text">Livelihoods create dignity. Through livestock projects, tailoring, typing, and sanitary pad production, we generate real and lasting economic independence.</div>
+    </div>
+    <div class="pillar-card reveal">
+      <div class="pillar-number">04</div>
+      <span class="pillar-icon">🌍</span>
+      <div class="pillar-title">Environmental Stewardship</div>
+      <div class="pillar-text">A healthy environment sustains communities. Our tree planting, climate-resilient farming, and conservation work ensure a livable future for generations to come.</div>
+    </div>
+  </div>
+</div>
+
+<!-- OBJECTIVES -->
+<div class="objectives-section">
+  <div class="obj-header">
+    <div>
+      <div class="section-label reveal">Core Objectives</div>
+      <h2 class="section-title reveal">What we are <em>committed</em> to</h2>
+    </div>
+    <p class="body-text reveal" style="margin:0">These are not abstract aspirations — they are the measurable commitments that guide every program, every partnership, and every decision BARWODA makes.</p>
+  </div>
+  <div class="obj-list">
+    <div class="obj-item reveal">
+      <div class="obj-count">1</div>
+      <div class="obj-content">
+        <strong>Eliminate Poverty, Unemployment, Hunger, Disease &amp; Illiteracy</strong>
+        <p>Promote women-led initiatives that tackle the full spectrum of rural poverty — providing not just resources, but the skills and knowledge to build lasting solutions from within communities.</p>
+        <span class="obj-tag">Economic Justice</span>
+      </div>
+    </div>
+    <div class="obj-item reveal">
+      <div class="obj-count">2</div>
+      <div class="obj-content">
+        <strong>Strengthen Participation of Marginalized Rural Women</strong>
+        <p>Ensure that the women most often left out of development programs — rural, low-income, with limited education — have access to training, resources, and platforms to participate and lead.</p>
+        <span class="obj-tag">Inclusion</span>
+      </div>
+    </div>
+    <div class="obj-item reveal">
+      <div class="obj-count">3</div>
+      <div class="obj-content">
+        <strong>Advance Environmental Conservation &amp; Sustainable Development</strong>
+        <p>Promote sustainable land use, tree planting, grafted mango farming, and climate-resilient agricultural practices that protect the environment while generating food security and income.</p>
+        <span class="obj-tag">Sustainability</span>
+      </div>
+    </div>
+    <div class="obj-item reveal">
+      <div class="obj-count">4</div>
+      <div class="obj-content">
+        <strong>Address Gender Inequality &amp; the Feminization of Poverty</strong>
+        <p>Directly confront the structural forces that keep women poor — through advocacy, paralegal training, community sensitization, and economic programs that build genuine financial independence.</p>
+        <span class="obj-tag">Gender Equity</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VALUES -->
+<div class="values-section">
+  <div class="section-label reveal">What We Believe</div>
+  <h2 class="section-title reveal">Our guiding <em>values</em></h2>
+  <div class="values-grid">
+    <div class="value-card reveal">
+      <span class="value-icon">🤝</span>
+      <div class="value-title">Community Partnership</div>
+      <div class="value-text">Communities are not recipients of development — they are its architects. BARWODA works with, not for, the communities it serves.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">👑</span>
+      <div class="value-title">Dignity First</div>
+      <div class="value-text">Every person deserves to be treated with respect and dignity. Our programs are designed to build confidence and self-worth, not dependency.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🔬</span>
+      <div class="value-title">Evidence &amp; Learning</div>
+      <div class="value-text">We track our impact rigorously and learn from every experience — continuously improving our programs based on what actually works in our communities.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🌐</span>
+      <div class="value-title">Inclusion</div>
+      <div class="value-text">Our work reaches the most marginalized — women and children in the deepest poverty. We are committed to leaving no one behind.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🔗</span>
+      <div class="value-title">Collaboration</div>
+      <div class="value-text">Real change requires partnership. We work with local government, international NGOs, and community leaders to maximize impact and scale our reach.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🌱</span>
+      <div class="value-title">Long-Term Thinking</div>
+      <div class="value-text">We invest in foundations — literacy, skills, rights knowledge — that empower communities to sustain development long after any project ends.</div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPACT FORWARD -->
+<div class="impact-forward">
+  <div class="if-grid">
+    <div class="reveal">
+      <div class="section-label">Progress So Far</div>
+      <h2 class="section-title">Vision becoming <em>reality</em></h2>
+      <p class="body-text">Our goals are not hypothetical. Over 26 years, BARWODA has translated vision into measurable impact — and the work continues to grow.</p>
+      <p class="body-text">Each number below represents lives changed, families strengthened, and communities empowered to shape their own futures.</p>
+    </div>
+    <div class="if-stats reveal">
+      <div class="if-stat">
+        <div class="if-num">145+</div>
+        <div class="if-label"><strong>Adults made literate</strong><p>Functional literacy opening doors to economic participation</p></div>
+      </div>
+      <div class="if-stat">
+        <div class="if-num">114</div>
+        <div class="if-label"><strong>Women trained in tailoring</strong><p>Generating real local income and financial independence</p></div>
+      </div>
+      <div class="if-stat">
+        <div class="if-num">150</div>
+        <div class="if-label"><strong>Human rights volunteers</strong><p>Active community advocates fighting violence and harmful practices</p></div>
+      </div>
+      <div class="if-stat">
+        <div class="if-num">9,500+</div>
+        <div class="if-label"><strong>Trees planted</strong><p>Climate-resilient environmental conservation in action</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <div class="section-label reveal" style="justify-content:center;display:inline-flex">Be Part of the Vision</div>
+  <h2 class="reveal">Invest in women.<br>Transform <em>everything.</em></h2>
+  <p class="reveal">BARWODA's vision is only possible with partners who believe in it. Join us.</p>
+  <div class="cta-buttons reveal">
+    <a href="index.html#contact" class="btn-primary">Partner With Us</a>
+    <a href="journey.html" class="btn-ghost">Our Journey →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo">BAR<em>WODA</em></span>
+      <p class="footer-desc">Bayira Rural Women's Development Association — transforming lives through education, livelihoods, health, and human rights in Western Uganda since 1998.</p>
+    </div>
+    <div class="footer-col"><h4>About</h4><ul><li><a href="who-we-are.html">Who We Are</a></li><li><a href="vision-goals.html">Vision &amp; Goals</a></li><li><a href="journey.html">Our Journey</a></li><li><a href="founders-members.html">Founders &amp; Members</a></li><li><a href="partners.html">Our Partners</a></li></ul></div>
+    <div class="footer-col"><h4>Programs</h4><ul><li><a href="index.html#programs">Adult Literacy</a></li><li><a href="index.html#programs">Skills Training</a></li><li><a href="index.html#programs">Human Rights</a></li><li><a href="index.html#programs">Health Services</a></li><li><a href="index.html#programs">Environmental</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="index.html#contact">Get In Touch</a></li><li><a href="index.html#contact">Kajwenge Centre</a></li><li><a href="index.html#contact">Kasese, Uganda</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2026 <em>BARWODA</em> · Bayira Rural Women's Development Association</div><div style="font-size:13px;color:var(--text-muted)">Registered · Kasese District Local Government</div></div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',(e)=>{mx=e.clientX;my=e.clientY;cursor.style.left=(mx-5)+'px';cursor.style.top=(my-5)+'px';});
+  (function animateRing(){rx+=(mx-rx-18)*0.12;ry+=(my-ry-18)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing);})();
+  document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.4)';});el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';});});
+  window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);});
+  let menuOpen=false;
+  document.getElementById('hamburgerBtn').addEventListener('click',()=>{menuOpen=!menuOpen;document.getElementById('mobileMenu').classList.toggle('open',menuOpen);});
+  function closeMobile(){menuOpen=false;document.getElementById('mobileMenu').classList.remove('open');}
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
