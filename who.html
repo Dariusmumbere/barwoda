@@ -73,10 +73,10 @@
   .mobile-cta-wrap { padding: 28px 28px 0; margin-top: auto; }
   .mobile-cta { display: block; width: 100%; padding: 16px 36px; background: var(--accent); color: #fff; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 16px; border: none; border-radius: var(--r); text-align: center; text-decoration: none; transition: all 0.25s; }
 
-  /* PAGE HERO */
-  .page-hero { position: relative; min-height: 52vh; display: flex; align-items: flex-end; padding: 0 56px 72px; overflow: hidden; z-index: 1; background: linear-gradient(160deg, rgba(45,122,79,0.03) 0%, transparent 50%); }
+  /* PAGE HERO — adjusted to avoid navbar overlap */
+  .page-hero { position: relative; min-height: 52vh; display: flex; align-items: flex-end; padding: 120px 56px 72px; overflow: hidden; z-index: 1; background: linear-gradient(160deg, rgba(45,122,79,0.03) 0%, transparent 50%); margin-top: 0; }
   .page-hero::before { content: 'WHO WE ARE'; position: absolute; bottom: -20px; right: 40px; font-family: 'Fraunces', serif; font-size: 220px; font-weight: 700; color: rgba(45,122,79,0.03); line-height: 1; pointer-events: none; white-space: nowrap; letter-spacing: -8px; }
-  .breadcrumb { position: absolute; top: 120px; left: 56px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+  .breadcrumb { position: absolute; top: 140px; left: 56px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
   .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .breadcrumb a:hover { color: var(--accent); }
   .breadcrumb span { color: var(--accent); }
@@ -110,6 +110,14 @@
   .identity-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
   .identity-text { font-size: 15px; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
   .identity-tag { display: inline-block; margin-top: 16px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); color: var(--accent); border-radius: var(--r); background: var(--surface); }
+
+  /* NEW SECTION: Organization Structure Image */
+  .org-structure { padding: 80px 56px; background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .org-structure-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .org-img-container { margin-top: 48px; border-radius: var(--r); overflow: hidden; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1); border: 1px solid var(--border2); background: #fff; transition: all 0.3s ease; }
+  .org-img-container:hover { transform: scale(1.01); box-shadow: 0 30px 45px -12px rgba(45,122,79,0.2); }
+  .org-structure-img { width: 100%; height: auto; display: block; object-fit: contain; background: #fefdfa; }
+  .org-caption { margin-top: 22px; font-size: 14px; font-weight: 300; color: var(--text-muted); letter-spacing: 0.3px; font-style: italic; }
 
   .membership { padding: 100px 56px; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .membership-header { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 72px; }
@@ -175,7 +183,7 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   @media (max-width: 1100px) { .founding { grid-template-columns: 1fr; gap: 56px; } .identity-grid { grid-template-columns: repeat(2,1fr); } .philosophy-grid { grid-template-columns: 1fr; gap: 48px; } .membership-header { grid-template-columns: 1fr; gap: 28px; } .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; } }
-  @media (max-width: 768px) { nav { padding: 16px 22px; } nav.scrolled { padding: 12px 22px; } .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .page-hero { padding: 0 22px 60px; min-height: 60vh; } .page-hero::before { display: none; } .breadcrumb { left: 22px; } .founding, .identity, .philosophy, .objectives, .cta-band, .membership { padding-left: 22px; padding-right: 22px; } .identity-grid { grid-template-columns: 1fr; } .membership-stats { grid-template-columns: 1fr; } .obj-grid { grid-template-columns: 1fr; } .footer-top { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 10px; text-align: center; } .founding-badge { bottom: -16px; right: 8px; } }
+  @media (max-width: 768px) { nav { padding: 16px 22px; } nav.scrolled { padding: 12px 22px; } .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .page-hero { padding: 100px 22px 60px; min-height: 60vh; } .page-hero::before { display: none; } .breadcrumb { left: 22px; top: 110px; } .founding, .identity, .philosophy, .objectives, .cta-band, .membership, .org-structure { padding-left: 22px; padding-right: 22px; } .identity-grid { grid-template-columns: 1fr; } .membership-stats { grid-template-columns: 1fr; } .obj-grid { grid-template-columns: 1fr; } .footer-top { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 10px; text-align: center; } .founding-badge { bottom: -16px; right: 8px; } .org-structure { padding: 60px 22px; } }
 </style>
 </head>
 <body>
@@ -188,6 +196,7 @@
 <nav id="navbar">
   <a href="index.html" class="nav-logo">BAR<em>WODA</em></a>
   <ul class="nav-links">
+    <li class="nav-item"><a href="index.html">Home</a></li>
     <li class="nav-item has-dropdown">
       <a href="#about" class="active-link">About</a>
       <div class="dropdown">
@@ -260,12 +269,26 @@
 
   <div class="identity"><div class="section-label reveal">What Defines Us</div><h2 class="section-title reveal">Our <em>identity</em></h2>
     <div class="identity-grid">
-      <div class="identity-card reveal" data-num="01"><span class="identity-icon">📍</span><div class="identity-title">Where We Work</div><div class="identity-text">Kajwenge Trading Centre, Kisinga Sub-county, Bukonzo, Kasese District — Western Uganda.</div><span class="identity-tag">Kasese District</span></div>
+      <div class="identity-card reveal" data-num="01"><span class="identity-icon">📍</span><div class="identity-title">Where We Work</div><div class="identity-text">Kasese District and Western Uganda.</div><span class="identity-tag">Kasese District</span></div>
       <div class="identity-card reveal" data-num="02"><span class="identity-icon">👥</span><div class="identity-title">Our Membership</div><div class="identity-text">47 members aged 22–42 years — 45 women and 2 men — united by shared commitment.</div><span class="identity-tag">47 Members</span></div>
       <div class="identity-card reveal" data-num="03"><span class="identity-icon">🏛️</span><div class="identity-title">Legal Status</div><div class="identity-text">Officially registered with Kasese District Local Government, Community Development Dept. Non-political, non-religious, non-profit.</div><span class="identity-tag">Registered NGO</span></div>
       <div class="identity-card reveal" data-num="04"><span class="identity-icon">🌍</span><div class="identity-title">Global Reach</div><div class="identity-text">International partnerships spanning Germany, UK, USA, Netherlands, Switzerland, Ghana.</div><span class="identity-tag">Global Partners</span></div>
       <div class="identity-card reveal" data-num="05"><span class="identity-icon">🏥</span><div class="identity-title">MaliMali Medical Centre</div><div class="identity-text">Community health facility in Kyarumba providing outpatient, inpatient, dental, eye care.</div><span class="identity-tag">Healthcare</span></div>
       <div class="identity-card reveal" data-num="06"><span class="identity-icon">📅</span><div class="identity-title">26 Years of Impact</div><div class="identity-text">145+ adults literate, 114 women trained in tailoring, 95 children supported, 9,500+ trees planted.</div><span class="identity-tag">Since 1998</span></div>
+    </div>
+  </div>
+
+  <!-- NEW SECTION: Organization Structure Image (dedicated area) -->
+  <div class="org-structure reveal">
+    <div class="org-structure-inner">
+      <div class="section-label" style="justify-content: center; display: inline-flex;">Governance Framework</div>
+      <h2 class="section-title">Our <em>organizational</em> structure</h2>
+      <p class="body-text" style="max-width: 720px; margin-left: auto; margin-right: auto; text-align: center;">A transparent, community-led governance model ensuring accountability and collective decision-making.</p>
+      <div class="org-img-container">
+        <!-- Placeholder for Organization Structure Image: replace 'organization-structure.png' with actual image path -->
+        <img src="structure.PNG" alt="BARWODA Organization Structure Chart" class="org-structure-img" onerror="this.onerror=null; this.src='https://placehold.co/1200x600/e8f5ee/2d7a4f?text=BARWODA+Organizational+Structure+(Chart+Placeholder)'">
+      </div>
+      <div class="org-caption">BARWODA's governance framework — General Assembly, Executive Committee, Program Leads, and Community Representatives.</div>
     </div>
   </div>
 
