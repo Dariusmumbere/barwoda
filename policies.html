@@ -3,11 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BARWODA — Document Centre</title>
+<title>BARWODA — Policy Hub | Governance & Compliance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   :root {
     --bg: #faf8f4;
     --surface: #f4f1eb;
@@ -21,13 +26,7 @@
     --border: rgba(45,122,79,0.12);
     --border2: rgba(45,122,79,0.25);
     --r: 2px;
-    --sidebar-w: 260px;
-    --danger: #c0392b;
-    --success: #2d7a4f;
   }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
 
   body {
     font-family: 'Cabinet Grotesk', sans-serif;
@@ -37,11 +36,7 @@
     cursor: none;
   }
 
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
-
-  /* ── CURSOR ── */
+  /* custom cursor */
   #cursor {
     position: fixed; width: 10px; height: 10px;
     background: var(--accent); border-radius: 50%;
@@ -54,8 +49,6 @@
     pointer-events: none; z-index: 9998;
     transition: all 0.18s ease;
   }
-
-  /* ── BG GRID ── */
   .bg-grid {
     position: fixed; inset: 0;
     background-image:
@@ -65,7 +58,6 @@
     pointer-events: none; z-index: 0;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     padding: 22px 56px;
@@ -80,499 +72,206 @@
     box-shadow: 0 1px 0 rgba(45,122,79,0.08);
   }
   .nav-logo {
-    font-family: 'Fraunces', serif; font-weight: 700; font-size: 22px;
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px;
     letter-spacing: -0.3px; color: var(--text); text-decoration: none;
   }
   .nav-logo em { font-style: italic; color: var(--accent); }
-
-  .nav-links { display: flex; gap: 6px; list-style: none; align-items: center; }
-  .nav-item { position: relative; }
+  .nav-links { display: flex; gap: 10px; list-style: none; align-items: center; }
   .nav-item > a {
-    font-size: 15px; font-weight: 600; color: #3a4a3e;
-    text-decoration: none; letter-spacing: 0.2px;
-    transition: color 0.2s; padding: 8px 14px;
-    display: flex; align-items: center; gap: 5px; border-radius: var(--r);
+    font-size: 17px; font-weight: 600;
+    color: #3a4a3e; text-decoration: none;
+    padding: 8px 16px; border-radius: var(--r);
+    transition: all 0.2s;
   }
   .nav-item > a:hover { color: var(--accent); background: rgba(45,122,79,0.07); }
   .nav-item > a.active-link { color: var(--accent); }
-
-  .nav-item.has-dropdown > a::after {
-    content: ''; width: 6px; height: 6px;
-    border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg) translateY(-2px); transition: transform 0.25s; display: inline-block;
-  }
-  .nav-item.has-dropdown:hover > a::after { transform: rotate(225deg) translateY(-2px); }
-  .nav-item.has-dropdown > a::before {
-    content: ''; position: absolute; bottom: -12px; left: 0; right: 0; height: 12px; background: transparent;
-  }
-
-  .dropdown {
-    position: absolute; top: calc(100% + 8px); left: 0;
-    background: rgba(250,248,244,0.98); backdrop-filter: blur(20px);
-    border: 1px solid var(--border2); min-width: 240px; padding: 8px 0;
-    border-radius: 4px; opacity: 0; visibility: hidden; pointer-events: none;
-    transform: translateY(8px);
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-    box-shadow: 0 12px 32px rgba(45,122,79,0.12), 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .nav-item.has-dropdown:hover .dropdown,
-  .nav-item.has-dropdown .dropdown:hover {
-    opacity: 1; visibility: visible; pointer-events: all; transform: translateY(0);
-  }
-  .dropdown a {
-    display: flex; align-items: center; gap: 12px; padding: 10px 18px;
-    font-size: 14px; font-weight: 500; color: #3a4a3e; text-decoration: none;
-    transition: all 0.2s; border-left: 2px solid transparent;
-  }
-  .dropdown a:hover { color: var(--accent); background: rgba(45,122,79,0.06); border-left-color: var(--accent); }
-  .dropdown-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
-  .dropdown-divider { height: 1px; background: var(--border); margin: 6px 12px; }
-  .dropdown-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--text-muted); padding: 6px 18px 4px;
-  }
-
   .nav-cta {
-    padding: 9px 22px; background: var(--accent); color: #fff;
-    font-family: 'Cabinet Grotesk', sans-serif; font-size: 13px; font-weight: 700;
-    border: none; cursor: none; border-radius: var(--r); transition: all 0.25s; margin-left: 8px;
+    padding: 9px 24px; background: var(--accent);
+    color: #fff; font-weight: 700; border: none; cursor: none;
+    border-radius: var(--r); transition: all 0.25s;
+    text-decoration: none;
   }
   .nav-cta:hover { background: #236640; transform: translateY(-1px); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; z-index: 1001; }
+  .hamburger span { width: 22px; height: 1.5px; background: var(--text); transition: 0.3s; }
 
-  .hamburger {
-    display: none; flex-direction: column; gap: 5px;
-    cursor: none; background: none; border: none; z-index: 1001; position: relative;
-  }
-  .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: all 0.3s; }
-
-  /* ── PAGE HERO BANNER ── */
-  .page-banner {
-    position: relative; z-index: 1;
-    padding: 120px 56px 56px;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(135deg, rgba(45,122,79,0.05) 0%, rgba(250,248,244,0) 60%);
-    overflow: hidden;
-  }
-  .page-banner::after {
-    content: '';
-    position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(45,122,79,0.07) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .page-banner-inner { max-width: 640px; position: relative; z-index: 1; }
-  .page-eyebrow {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-size: 12px; font-weight: 700; color: var(--accent);
-    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px;
-  }
-  .page-eyebrow-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .page-banner h1 {
-    font-family: 'Fraunces', serif; font-size: clamp(40px, 5vw, 68px);
-    font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 18px;
-  }
-  .page-banner h1 em { font-style: italic; color: var(--accent); }
-  .page-banner p {
-    font-size: 18px; font-weight: 300; color: var(--text-muted); line-height: 1.75; max-width: 480px;
-  }
-
-  /* ── APP BODY ── */
-  .app-body {
-    display: flex; position: relative; z-index: 1;
-    min-height: calc(100vh - 260px);
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: var(--sidebar-w); flex-shrink: 0;
-    background: var(--surface); border-right: 1px solid var(--border);
-    padding: 28px 14px; position: sticky; top: 0; height: calc(100vh - 260px);
-    overflow-y: auto; display: flex; flex-direction: column; gap: 4px;
-  }
-
-  .sidebar-section-label {
-    font-size: 10px; font-weight: 700; color: var(--text-muted);
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0 10px; margin: 14px 0 6px;
-  }
-  .sidebar-section-label:first-child { margin-top: 0; }
-
-  .nav-item-side {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; border-radius: var(--r);
-    cursor: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted);
-    transition: all 0.2s; border: 1px solid transparent;
-  }
-  .nav-item-side:hover { background: var(--surface2); color: var(--text); border-color: var(--border); }
-  .nav-item-side.active {
-    background: var(--accent-light); color: var(--accent); border-color: var(--border2);
-    font-weight: 700;
-  }
-  .nav-item-side i { width: 16px; text-align: center; font-size: 13px; flex-shrink: 0; }
-
-  .storage-widget {
-    margin-top: auto; padding: 18px; background: var(--bg);
-    border: 1px solid var(--border); border-radius: var(--r);
-  }
-  .storage-widget-head {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-  }
-  .storage-widget-label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
-  .storage-widget-pct { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); font-weight: 500; }
-  .storage-bar-track { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
-  .storage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.8s ease; }
-  .storage-detail { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); }
-
-  /* ── CONTENT AREA ── */
-  .content {
-    flex: 1; padding: 32px 40px; overflow-y: auto; background: var(--bg);
-  }
-
-  .content-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
-  }
-
-  .breadcrumb {
-    display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-  }
-  .crumb {
-    font-size: 13px; font-weight: 500; color: var(--text-muted);
-    padding: 4px 7px; border-radius: var(--r); cursor: none; transition: all 0.2s;
-  }
-  .crumb:not(.active):hover { background: var(--surface2); color: var(--text); cursor: pointer; }
-  .crumb.active { color: var(--text); font-weight: 700; }
-  .crumb-sep { color: var(--text-muted); font-size: 12px; user-select: none; }
-
-  .action-row { display: flex; gap: 8px; }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 20px; font-family: 'Cabinet Grotesk', sans-serif;
-    font-size: 13px; font-weight: 700; border: none; border-radius: var(--r);
-    cursor: none; transition: all 0.22s; letter-spacing: 0.2px; text-decoration: none;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #236640; transform: translateY(-1px); }
-  .btn-ghost {
-    background: #fff; color: var(--text); border: 1px solid var(--border);
-  }
-  .btn-ghost:hover { border-color: var(--border2); background: var(--surface2); }
-  .btn-danger {
-    background: rgba(192,58,43,0.09); color: var(--danger); border: 1px solid rgba(192,58,43,0.2);
-  }
-  .btn-danger:hover { background: rgba(192,58,43,0.16); }
-
-  /* ── UPLOAD ZONE ── */
-  .upload-zone {
-    border: 1.5px dashed var(--border2);
-    border-radius: 4px; padding: 40px;
-    text-align: center; margin-bottom: 28px;
-    cursor: none; transition: all 0.25s; background: var(--surface);
-    position: relative; overflow: hidden;
-  }
-  .upload-zone:hover, .upload-zone.dragover {
-    border-color: var(--accent); background: var(--accent-light);
-    box-shadow: 0 0 0 3px rgba(45,122,79,0.08);
-  }
-  .upload-zone-icon {
-    width: 56px; height: 56px; background: var(--accent-light);
-    border: 1px solid var(--border2); border-radius: var(--r);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; color: var(--accent); margin: 0 auto 16px;
-  }
-  .upload-zone h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
-  .upload-zone p { font-size: 14px; color: var(--text-muted); font-weight: 300; }
-  .upload-zone strong { color: var(--accent); }
-
-  /* ── ALERTS ── */
-  #alerts-container {
-    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
-    display: flex; flex-direction: column; gap: 8px; pointer-events: none;
-  }
-  .alert {
-    padding: 12px 18px; border-radius: 4px; font-size: 13.5px; font-weight: 600;
-    max-width: 340px; pointer-events: all; border: 1px solid transparent;
-    animation: slideIn 0.22s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  }
-  @keyframes slideIn { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
-  .alert-success { background: rgba(45,122,79,0.1); border-color: rgba(45,122,79,0.25); color: var(--accent2); }
-  .alert-error { background: rgba(192,58,43,0.1); border-color: rgba(192,58,43,0.25); color: var(--danger); }
-
-  /* ── AUTH OVERLAY ── */
-  #auth-overlay {
-    position: fixed; inset: 0; z-index: 2000;
-    background: rgba(250,248,244,0.97); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center; padding: 20px;
-  }
-  #auth-overlay.hidden { display: none; }
-
-  .auth-card {
-    background: #fff; border: 1px solid var(--border);
-    border-radius: 4px; padding: 40px; width: 100%; max-width: 440px;
-    box-shadow: 0 16px 48px rgba(45,122,79,0.12);
-    animation: fadeUp 0.4s ease;
-  }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-
-  .auth-logo {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
-  }
-  .auth-logo-icon {
-    width: 36px; height: 36px; background: var(--accent);
-    border-radius: var(--r); display: flex; align-items: center;
-    justify-content: center; font-size: 16px; color: #fff;
-  }
-  .auth-logo-text { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; }
-  .auth-logo-text em { font-style: italic; color: var(--accent); }
-
-  .auth-tabs {
-    display: flex; background: var(--surface); border-radius: var(--r); padding: 3px; margin-bottom: 24px;
-  }
-  .auth-tab {
-    flex: 1; text-align: center; padding: 8px; cursor: none;
-    font-size: 13px; font-weight: 600; color: var(--text-muted);
-    border-radius: var(--r); transition: all 0.2s;
-  }
-  .auth-tab.active { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-
-  .auth-form { display: none; }
-  .auth-form.active { display: block; }
-
-  .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
-  .form-input {
-    width: 100%; padding: 11px 14px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--r); color: var(--text);
-    font-family: 'Cabinet Grotesk', sans-serif; font-size: 14px; transition: all 0.2s;
-  }
-  .form-input:focus { outline: none; border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 0 3px rgba(45,122,79,0.08); }
-  .form-input::placeholder { color: #aab4a8; }
-
-  .btn-google {
-    width: 100%; margin-top: 10px; background: #fff; color: var(--text);
-    border: 1px solid var(--border); gap: 10px;
-  }
-  .btn-google:hover { border-color: var(--border2); }
-
-  .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: var(--text-muted); font-size: 12px; }
-  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  #auth-alert { margin-top: 14px; border-radius: var(--r); font-size: 13px; padding: 10px 14px; display: none; }
-  #auth-alert.active { display: block; }
-
-  /* ── FILE GRID ── */
-  .files-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 14px;
-  }
-
-  .file-card, .folder-card {
-    background: #fff; border: 1px solid var(--border);
-    border-radius: var(--r); padding: 20px 16px 16px;
-    cursor: none; transition: all 0.25s; position: relative; overflow: hidden;
-  }
-  .file-card:hover, .folder-card:hover {
-    border-color: var(--border2); background: var(--surface);
-    transform: translateY(-3px); box-shadow: 0 8px 24px rgba(45,122,79,0.1);
-  }
-  .file-card::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
-  }
-  .file-card:hover::after { transform: scaleX(1); }
-
-  .item-icon { font-size: 36px; margin-bottom: 14px; display: block; }
-  .folder-icon-color { color: var(--accent); }
-  .file-icon-color { color: var(--text-muted); }
-
-  .item-name {
-    font-size: 13px; font-weight: 600; margin-bottom: 4px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text);
-  }
-  .item-meta {
-    font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); margin-bottom: 14px;
-  }
-  .item-actions { display: flex; gap: 4px; }
-  .act-btn {
-    background: none; border: none; cursor: none; color: var(--text-muted);
-    font-size: 12px; padding: 5px 8px; border-radius: var(--r);
-    transition: all 0.2s; line-height: 1;
-  }
-  .act-btn:hover { background: var(--surface2); color: var(--text); }
-  .act-btn.danger:hover { background: rgba(192,58,43,0.09); color: var(--danger); }
-
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center; padding: 80px 20px; color: var(--text-muted);
-  }
-  .empty-icon {
-    width: 72px; height: 72px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--r);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; margin: 0 auto 22px; color: var(--text-muted);
-  }
-  .empty-state h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-  .empty-state p { font-size: 14px; font-weight: 300; }
-
-  /* ── SPINNER ── */
-  .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border); border-top-color: var(--accent);
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-    margin: 60px auto;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── MODAL ── */
-  .modal {
-    display: none; position: fixed; inset: 0;
-    background: rgba(26,26,24,0.6); backdrop-filter: blur(4px);
-    z-index: 3000; align-items: center; justify-content: center; padding: 20px;
-  }
-  .modal.active { display: flex; animation: fadeIn 0.18s ease; }
-  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-  .modal-box {
-    background: #fff; border: 1px solid var(--border);
-    border-radius: 4px; width: 100%; max-width: 520px; padding: 32px;
-    box-shadow: 0 24px 64px rgba(45,122,79,0.15);
-    animation: scaleIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes scaleIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
-
-  .modal-head {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
-  }
-  .modal-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .modal-close {
-    background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-    width: 32px; height: 32px; border-radius: 50%; cursor: none; font-size: 16px;
-    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-  }
-  .modal-close:hover { background: var(--surface2); color: var(--text); }
-
-  .preview-img { max-width: 100%; max-height: 360px; border-radius: var(--r); display: block; margin: 0 auto 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-  .preview-meta {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
-    padding: 14px; font-size: 13px; margin-bottom: 16px;
-  }
-  .meta-row { display: flex; justify-content: space-between; padding: 4px 0; }
-  .meta-row span:first-child { color: var(--text-muted); font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-  .meta-row span:last-child { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); }
-  .preview-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-
-  /* ── USER STRIP ── */
-  .user-strip {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(250,248,244,0.95); backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 40px 10px 40px;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .user-pill {
-    display: flex; align-items: center; gap: 9px;
-    padding: 5px 12px 5px 5px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: 99px;
-  }
-  .user-avatar {
-    width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: #fff;
-  }
-  .user-name { font-size: 13px; font-weight: 600; }
-  .search-wrap { flex: 1; max-width: 380px; position: relative; }
-  .search-wrap .fa-search { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px; pointer-events: none; }
-  .search-input {
-    width: 100%; padding: 9px 12px 9px 34px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--r);
-    font-family: 'Cabinet Grotesk', sans-serif; font-size: 13px; color: var(--text); transition: all 0.2s;
-  }
-  .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,122,79,0.08); }
-  .search-input::placeholder { color: var(--text-muted); }
-  .sign-out-btn {
-    font-size: 12px; padding: 6px 14px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--r); color: var(--text-muted);
-    font-weight: 600; cursor: none; transition: all 0.2s; font-family: 'Cabinet Grotesk', sans-serif;
-  }
-  .sign-out-btn:hover { border-color: var(--border2); color: var(--text); }
-
-  /* ── MOBILE MENU ── */
+  /* mobile menu (simplified) */
   .mobile-menu {
-    position: fixed; inset: 0; background: rgba(250,248,244,0.98);
-    backdrop-filter: blur(20px); z-index: 998; padding: 88px 0 40px;
-    display: flex; flex-direction: column; overflow-y: auto;
-    transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    position: fixed; inset: 0; background: rgba(250,248,244,0.98); backdrop-filter: blur(20px);
+    z-index: 998; padding: 88px 0 40px; transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    overflow-y: auto;
   }
   .mobile-menu.open { transform: translateX(0); }
-  .mobile-nav-item { border-bottom: 1px solid var(--border); }
   .mobile-nav-link {
-    display: flex; align-items: center; justify-content: space-between; padding: 18px 28px;
-    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--text);
-    text-decoration: none; letter-spacing: -0.5px; font-style: italic;
-    background: none; border: none; width: 100%; text-align: left; cursor: pointer; transition: color 0.2s;
+    display: block; padding: 18px 28px; font-family: 'Fraunces', serif;
+    font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none;
   }
-  .mobile-nav-link:hover { color: var(--accent); }
-  .mobile-chevron { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform 0.3s; flex-shrink: 0; margin-top: -4px; }
-  .mobile-nav-item.expanded .mobile-chevron { transform: rotate(225deg); margin-top: 4px; }
-  .mobile-nav-item.expanded .mobile-nav-link { color: var(--accent); }
-  .mobile-submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1); background: rgba(45,122,79,0.03); }
-  .mobile-nav-item.expanded .mobile-submenu { max-height: 600px; }
-  .mobile-sub-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); padding: 12px 28px 6px; }
-  .mobile-submenu a { display: flex; align-items: center; gap: 12px; padding: 11px 28px 11px 36px; font-size: 15px; font-weight: 500; color: #3a5a44; text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; font-style: normal; font-family: 'Cabinet Grotesk', sans-serif; }
-  .mobile-submenu a:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(45,122,79,0.05); }
-  .mobile-sub-divider { height: 1px; background: var(--border); margin: 6px 28px; }
-  .mobile-cta-wrap { padding: 28px 28px 0; margin-top: auto; }
-  .mobile-cta { display: block; width: 100%; padding: 16px 36px; background: var(--accent); color: #fff; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 16px; border: none; border-radius: var(--r); text-align: center; text-decoration: none; transition: all 0.25s; }
-  .mobile-cta:hover { background: #236640; }
+  .mobile-cta-wrap { padding: 28px; margin-top: auto; }
+  .mobile-cta { display: block; background: var(--accent); color: #fff; padding: 16px; text-align: center; border-radius: var(--r); text-decoration: none; }
 
-  /* ── FOOTER ── */
+  /* policy hub hero */
+  .policy-hero {
+    position: relative; min-height: 50vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; z-index: 1; padding: 140px 32px 80px;
+    background: linear-gradient(120deg, rgba(45,122,79,0.04) 0%, rgba(26,107,92,0.02) 100%);
+  }
+  .policy-hero h1 {
+    font-family: 'Fraunces', serif; font-size: clamp(48px, 7vw, 80px);
+    font-weight: 700; letter-spacing: -2px;
+  }
+  .policy-hero h1 em { font-style: italic; color: var(--accent); }
+  .policy-hero p { max-width: 640px; margin: 24px auto 0; font-size: 18px; color: var(--text-muted); font-weight: 300; }
+
+  /* policy grid */
+  .policies-section {
+    padding: 60px 56px 100px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  .policies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .policy-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 4px 14px rgba(45,122,79,0.05);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .policy-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 20px 32px -12px rgba(45,122,79,0.2);
+  }
+  .thumbnail {
+    background: var(--surface2);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .thumbnail .doc-icon {
+    font-size: 64px;
+    transition: transform 0.25s ease;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+  }
+  .policy-card:hover .thumbnail .doc-icon {
+    transform: scale(1.05);
+    color: var(--accent);
+  }
+  .badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 40px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    backdrop-filter: blur(2px);
+  }
+  .policy-info {
+    padding: 24px 24px 28px;
+  }
+  .policy-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  .policy-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .policy-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent2);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 4px;
+  }
+  .drive-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+  }
+  .drive-link:hover { gap: 10px; color: var(--accent2); }
+
   footer {
-    background: #1a3829; border-top: 1px solid rgba(255,255,255,0.1);
-    padding: 60px 56px 36px; position: relative; z-index: 1;
+    background: #1a3829;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 60px 56px 36px;
+    position: relative;
+    z-index: 1;
   }
-  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 56px; margin-bottom: 56px; }
-  .footer-logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; margin-bottom: 14px; display: block; color: #fff; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 56px;
+    margin-bottom: 56px;
+  }
+  .footer-logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; color: #fff; display: block; margin-bottom: 14px; }
   .footer-logo em { font-style: italic; color: #7ed9a0; }
-  .footer-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 22px; max-width: 260px; font-weight: 300; }
-  .footer-social { display: flex; gap: 10px; }
-  .social-link { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.3s; border-radius: var(--r); }
-  .social-link:hover { border-color: #7ed9a0; color: #7ed9a0; }
+  .footer-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; max-width: 260px; }
   .footer-col h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 18px; }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .footer-col ul a { font-size: 14px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; font-weight: 300; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul a { font-size: 14px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
   .footer-col ul a:hover { color: #7ed9a0; }
-  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 26px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .footer-copy { font-size: 13px; color: rgba(255,255,255,0.45); }
-  .footer-copy em { font-style: normal; color: #7ed9a0; }
-  .reg-badge { font-size: 12px; color: rgba(255,255,255,0.35); }
+  .footer-copy em { color: #7ed9a0; font-style: normal; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .app-body { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; position: static; padding: 12px 14px; flex-direction: row; flex-wrap: wrap; gap: 6px; border-right: none; border-bottom: 1px solid var(--border); }
-    .sidebar-section-label { display: none; }
-    .storage-widget { display: none; }
-    .nav-item-side { padding: 7px 10px; font-size: 13px; }
-    .content { padding: 20px; }
+  @media (max-width: 1100px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .policies-section { padding: 40px 32px 80px; }
   }
   @media (max-width: 768px) {
     nav { padding: 16px 22px; }
-    nav.scrolled { padding: 12px 22px; }
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
-    .page-banner { padding: 100px 22px 44px; }
-    .user-strip { padding: 10px 20px; }
-    .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
-    .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
-  }
-  @media (max-width: 480px) {
+    .policies-section { padding: 30px 20px 60px; }
+    .policy-hero { padding: 120px 24px 60px; }
     .footer-top { grid-template-columns: 1fr; }
-    .files-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .footer-bottom { flex-direction: column; text-align: center; }
   }
+  .reveal { opacity: 0; transform: translateY(24px); transition: all 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -581,727 +280,181 @@
 <div id="cursor-ring"></div>
 <div class="bg-grid"></div>
 
-<!-- AUTH OVERLAY -->
-<div id="auth-overlay">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo-icon"><i class="fas fa-leaf"></i></div>
-      <span class="auth-logo-text">BAR<em>WODA</em> Docs</span>
-    </div>
-    <div class="auth-tabs">
-      <div class="auth-tab active" data-tab="login">Sign In</div>
-      <div class="auth-tab" data-tab="register">Create Account</div>
-    </div>
-    <form id="login-form" class="auth-form active">
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" id="login-email" class="form-input" placeholder="you@barwoda.org" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px">Sign In</button>
-      <div class="divider"><span>or</span></div>
-      <button type="button" id="google-login-btn" class="btn btn-google btn-ghost">
-        <i class="fab fa-google"></i> Continue with Google
-      </button>
-    </form>
-    <form id="register-form" class="auth-form">
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input type="text" id="reg-name" class="form-input" placeholder="Jane Atuha" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" id="reg-email" class="form-input" placeholder="you@barwoda.org" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" id="reg-password" class="form-input" placeholder="Min. 6 characters" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px">Create Account</button>
-      <div class="divider"><span>or</span></div>
-      <button type="button" id="google-reg-btn" class="btn btn-google btn-ghost">
-        <i class="fab fa-google"></i> Continue with Google
-      </button>
-    </form>
-    <div id="auth-alert" class="alert"></div>
-  </div>
-</div>
-
-<!-- NAV -->
 <nav id="navbar">
-  <a href="index.html" class="nav-logo">BAR<em>WODA</em></a>
+  <a href="#" class="nav-logo">BAR<em>WODA</em></a>
   <ul class="nav-links">
-    <li class="nav-item"><a href="index.html">Home</a></li>
-    <li class="nav-item has-dropdown">
-      <a href="#about">About</a>
-      <div class="dropdown">
-        <div class="dropdown-label">Organization</div>
-        <a href="who.html"><span class="dropdown-icon">🌿</span>Who We Are</a>
-        <a href="goals.html"><span class="dropdown-icon">🎯</span>Our Vision &amp; Goals</a>
-        <a href="journey.html"><span class="dropdown-icon">📅</span>Our Journey</a>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-label">Leadership</div>
-        <a href="founders.html"><span class="dropdown-icon">👥</span>Founders &amp; Members</a>
-      </div>
-    </li>
-    <li class="nav-item"><a href="index.html#impact">Impact</a></li>
-    <li class="nav-item has-dropdown">
-      <a href="index.html#programs">Programs</a>
-      <div class="dropdown">
-        <div class="dropdown-label">Education</div>
-        <a href="adult.html"><span class="dropdown-icon">✍️</span>Adult Literacy</a>
-        <a href="technical.html"><span class="dropdown-icon">📚</span>Skills &amp; Vocational Training</a>
-        <a href="children.html"><span class="dropdown-icon">👶</span>Children Support</a>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-label">Community</div>
-        <a href="human.html"><span class="dropdown-icon">⚖️</span>Human Rights &amp; GBV</a>
-        <a href="health.html"><span class="dropdown-icon">🏥</span>MaliMali Health Centre</a>
-        <a href="environment.html"><span class="dropdown-icon">🌱</span>Environmental Conservation</a>
-        <a href="livestock.html"><span class="dropdown-icon">🐷</span>Livestock &amp; Farming</a>
-        <a href="menstrual.html"><span class="dropdown-icon">🪡</span>Menstrual Health</a>
-      </div>
-    </li>
-    <li class="nav-item"><a href="index.html#partners">Partners</a></li>
-    <li class="nav-item"><a href="gallery.html">Gallery</a></li>
-    <li class="nav-item"><a href="index.html#contact">Contact</a></li>
-    <li class="nav-item"><a href="documents.html" class="active-link">Documents</a></li>
+    <li class="nav-item"><a href="#" class="active-link">Policies Hub</a></li>
+    <li class="nav-item"><a href="#about-barwoda">About BARWODA</a></li>
+    <li class="nav-item"><a href="#governance">Governance</a></li>
+    <li class="nav-item"><a href="#contact-footer">Contact</a></li>
   </ul>
-  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Support Us</button>
-  <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <a href="#contact-footer" class="nav-cta">Support Us</a>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-nav-item">
-    <a href="index.html" class="mobile-nav-link" style="font-style:italic" onclick="closeMobile()">Home</a>
-  </div>
-  <div class="mobile-nav-item" id="mobileAbout">
-    <button class="mobile-nav-link" onclick="toggleMobileSub('mobileAbout')">About<span class="mobile-chevron"></span></button>
-    <div class="mobile-submenu">
-      <div class="mobile-sub-label">Organization</div>
-      <a href="who.html" onclick="closeMobile()"><span>🌿</span> Who We Are</a>
-      <a href="goals.html" onclick="closeMobile()"><span>🎯</span> Vision &amp; Goals</a>
-      <a href="founders.html" onclick="closeMobile()"><span>👥</span> Founders</a>
-    </div>
-  </div>
-  <div class="mobile-nav-item">
-    <a href="gallery.html" class="mobile-nav-link" style="font-style:italic" onclick="closeMobile()">Gallery</a>
-  </div>
-  <div class="mobile-nav-item">
-    <a href="documents.html" class="mobile-nav-link" style="font-style:italic;color:var(--accent)" onclick="closeMobile()">Documents</a>
-  </div>
-  <div class="mobile-nav-item">
-    <a href="index.html#contact" class="mobile-nav-link" style="font-style:italic" onclick="closeMobile()">Contact</a>
-  </div>
-  <div class="mobile-cta-wrap">
-    <a href="index.html#contact" class="mobile-cta" onclick="closeMobile()">Support Us →</a>
+  <a href="#" class="mobile-nav-link" onclick="closeMobile()">Policies Hub</a>
+  <a href="#about-barwoda" class="mobile-nav-link" onclick="closeMobile()">About BARWODA</a>
+  <a href="#governance" class="mobile-nav-link" onclick="closeMobile()">Governance</a>
+  <div class="mobile-cta-wrap"><a href="#contact-footer" class="mobile-cta" onclick="closeMobile()">Support Us →</a></div>
+</div>
+
+<!-- Hero policy section -->
+<div class="policy-hero">
+  <div>
+    <h1>Integrity &<br><em>Governance Hub</em></h1>
+    <p>BARWODA operates with full transparency, accountability, and ethical standards. Access our official policies, codes, and constitutional documents — all in one place.</p>
   </div>
 </div>
 
-<!-- PAGE BANNER -->
-<div class="page-banner">
-  <div class="page-banner-inner">
-    <div class="page-eyebrow">
-      <span class="page-eyebrow-dot"></span>
-      BARWODA · Document Centre
-    </div>
-    <h1>Our <em>Documents</em><br>& Records</h1>
-    <p>Securely upload, store, and share BARWODA's organizational documents, reports, and resources. Members only access.</p>
+<!-- policy grid with thumbnails and drive links -->
+<section class="policies-section" id="policies-list">
+  <div class="section-label" style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+    <span style="width:28px; height:1px; background:var(--accent);"></span>
+    <span style="font-size:12px; font-weight:700; letter-spacing:2px; color:var(--accent); text-transform:uppercase;">BARWODA Official Documents</span>
   </div>
-</div>
+  <h2 class="section-title" style="font-family:'Fraunces',serif; font-size:clamp(36px,4vw,52px);">Policies & <em>Frameworks</em></h2>
+  <div class="policies-grid" id="policyGrid"></div>
+</section>
 
-<!-- USER STRIP (shown when logged in) -->
-<div class="user-strip" id="user-strip" style="display:none">
-  <div class="user-pill">
-    <div class="user-avatar" id="user-avatar">BA</div>
-    <span class="user-name" id="user-name-display">Member</span>
+<section id="about-barwoda" style="background:var(--surface); padding:80px 56px;">
+  <div class="reveal" style="max-width:900px; margin:0 auto; text-align:center;">
+    <div class="section-label" style="justify-content:center;">Our Commitment</div>
+    <h2 class="section-title" style="font-size:clamp(34px,5vw,48px);">Accountability & <em>Transparency</em></h2>
+    <p style="font-size:17px; color:var(--text-muted); line-height:1.7; margin-top:24px;">BARWODA — Bayira Rural Women's Development Association is fully registered under Kasese District Local Government. Our policies align with international best practices in anti-fraud, anti-corruption, safeguarding, risk management, and governance. Every document here represents our promise to donors, partners, and the communities we serve: integrity above all.</p>
   </div>
-  <div class="search-wrap">
-    <i class="fas fa-search"></i>
-    <input type="text" class="search-input" id="search-input" placeholder="Search documents & folders…">
-  </div>
-  <button class="sign-out-btn" id="logout-btn">Sign Out</button>
-</div>
+</section>
 
-<!-- APP BODY -->
-<div class="app-body" id="app-body" style="display:none">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <span class="sidebar-section-label">Browse</span>
-    <div class="nav-item-side active" data-section="files"><i class="fas fa-folder-open"></i> All Documents</div>
-    <div class="nav-item-side" data-section="recent"><i class="fas fa-clock-rotate-left"></i> Recent</div>
-    <div class="nav-item-side" data-section="shared"><i class="fas fa-share-nodes"></i> Shared</div>
-    <div class="nav-item-side" data-section="trash"><i class="fas fa-trash"></i> Trash</div>
-
-    <span class="sidebar-section-label">Quick Access</span>
-    <div class="nav-item-side" onclick="handleQuickFolder('Reports')"><i class="fas fa-chart-bar"></i> Reports</div>
-    <div class="nav-item-side" onclick="handleQuickFolder('Projects')"><i class="fas fa-seedling"></i> Projects</div>
-    <div class="nav-item-side" onclick="handleQuickFolder('Partners')"><i class="fas fa-handshake"></i> Partners</div>
-    <div class="nav-item-side" onclick="handleQuickFolder('Media')"><i class="fas fa-photo-film"></i> Media</div>
-
-    <div class="storage-widget">
-      <div class="storage-widget-head">
-        <span class="storage-widget-label">Storage Used</span>
-        <span class="storage-widget-pct" id="storage-pct">0%</span>
-      </div>
-      <div class="storage-bar-track"><div class="storage-bar-fill" id="storage-bar" style="width:0%"></div></div>
-      <div class="storage-detail" id="storage-detail">0 GB of 10 GB</div>
-    </div>
-  </aside>
-
-  <!-- CONTENT -->
-  <main class="content" id="main-content">
-    <div class="content-header">
-      <div class="breadcrumb" id="breadcrumb">
-        <span class="crumb active" data-id="root">My Drive</span>
-      </div>
-      <div class="action-row">
-        <button id="new-folder-btn" class="btn btn-ghost"><i class="fas fa-folder-plus"></i> New Folder</button>
-        <button id="upload-btn" class="btn btn-primary"><i class="fas fa-arrow-up-from-bracket"></i> Upload</button>
-        <input type="file" id="file-input" multiple style="display:none">
-      </div>
-    </div>
-
-    <!-- Upload Zone -->
-    <div class="upload-zone" id="upload-zone">
-      <div class="upload-zone-icon"><i class="fas fa-cloud-arrow-up"></i></div>
-      <h3>Drop files to upload</h3>
-      <p>Or <strong>click to browse</strong> · PDFs, images, documents — up to 10 GB per file</p>
-    </div>
-
-    <!-- Files -->
-    <div id="loading-spinner" class="spinner" style="display:none"></div>
-    <div id="files-content"></div>
-  </main>
-</div>
-
-<!-- ALERTS -->
-<div id="alerts-container"></div>
-
-<!-- MODAL: NEW FOLDER -->
-<div id="folder-modal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 class="modal-title">New Folder</h3>
-      <button class="modal-close" data-modal="folder-modal">&times;</button>
-    </div>
-    <form id="folder-form">
-      <div class="form-group">
-        <label class="form-label">Folder Name</label>
-        <input type="text" id="folder-name-input" class="form-input" placeholder="e.g. Annual Reports 2025" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">Create Folder</button>
-    </form>
-  </div>
-</div>
-
-<!-- MODAL: PREVIEW -->
-<div id="preview-modal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 class="modal-title" id="preview-title">Document Preview</h3>
-      <button class="modal-close" data-modal="preview-modal">&times;</button>
-    </div>
-    <div id="preview-content"></div>
-    <div class="preview-actions" style="margin-top:20px">
-      <button id="download-btn" class="btn btn-ghost"><i class="fas fa-download"></i> Download</button>
-      <button id="share-btn" class="btn btn-ghost"><i class="fas fa-share"></i> Share</button>
-      <button id="delete-preview-btn" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-top">
+<section id="governance" style="padding:80px 56px; background:var(--bg);">
+  <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
     <div>
+      <div class="section-label">Governance Structure</div>
+      <h2 class="section-title">Ethical <em>Operations</em></h2>
+      <p class="section-desc" style="margin-bottom:24px;">Our constitution, code of conduct, whistleblower mechanism, and financial regulations ensure every decision prioritizes the welfare of rural women and children. All policies are reviewed annually by the executive committee and board of advisors.</p>
+      <ul style="list-style:none; margin-top:20px;">
+        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Zero tolerance for fraud & corruption</li>
+        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Whistleblower protection active</li>
+        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Risk management & safeguarding first</li>
+      </ul>
+    </div>
+    <div style="background:var(--surface); padding:36px; border-radius:var(--r); border:1px solid var(--border);">
+      <div style="font-family:'Fraunces',serif; font-size:38px; font-weight:700; color:var(--accent); margin-bottom:12px;">28+ years</div>
+      <div style="font-size:16px; color:var(--text-muted);">Serving with integrity since 1998 — BARWODA remains a pillar of trust in Western Uganda.</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
       <span class="footer-logo">BAR<em>WODA</em></span>
-      <p class="footer-desc">Bayira Rural Women's Development Association — transforming lives through education, livelihoods, health, and human rights in Western Uganda since 1998.</p>
-      <div class="footer-social">
-        <a href="#" class="social-link">𝕏</a>
-        <a href="#" class="social-link">in</a>
-        <a href="#" class="social-link">f</a>
-        <a href="#" class="social-link">✉</a>
-      </div>
+      <p class="footer-desc">Bayira Rural Women's Development Association — transforming lives through education, livelihoods, health, and human rights since 1998.</p>
     </div>
-    <div class="footer-col">
-      <h4>Programs</h4>
-      <ul>
-        <li><a href="adult.html">Adult Literacy</a></li>
-        <li><a href="technical.html">Skills Training</a></li>
-        <li><a href="human.html">Human Rights</a></li>
-        <li><a href="health.html">Health Services</a></li>
-        <li><a href="environment.html">Environmental</a></li>
-        <li><a href="livestock.html">Livestock</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Organization</h4>
-      <ul>
-        <li><a href="who.html">About BARWODA</a></li>
-        <li><a href="index.html#impact">Our Impact</a></li>
-        <li><a href="journey.html">Our Journey</a></li>
-        <li><a href="index.html#partners">Partners</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Location</h4>
-      <ul>
-        <li><a href="#">Kajwenge Centre</a></li>
-        <li><a href="#">Kisinga Sub-county</a></li>
-        <li><a href="#">Bukonzo, Kasese</a></li>
-        <li><a href="#">Western Uganda</a></li>
-        <li><a href="#">MaliMali Clinic</a></li>
-      </ul>
-    </div>
+    <div class="footer-col"><h4>Programs</h4><ul><li><a href="#">Adult Literacy</a></li><li><a href="#">Skills Training</a></li><li><a href="#">Human Rights</a></li><li><a href="#">Health Services</a></li></ul></div>
+    <div class="footer-col"><h4>Organization</h4><ul><li><a href="#">About BARWODA</a></li><li><a href="#">Our Impact</a></li><li><a href="#">Partners</a></li><li><a href="#">Policies Hub</a></li></ul></div>
+    <div class="footer-col"><h4>Location</h4><ul><li><a href="#">Kisinga Sub-county</a></li><li><a href="#">Bukonzo, Kasese</a></li><li><a href="#">Western Uganda</a></li><li><a href="#">MaliMali Clinic</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <div class="footer-copy">© 2026 <em>BARWODA</em> · Bayira Rural Women's Development Association</div>
-    <div class="reg-badge">Registered · Kasese District Local Government · Community Development Dept.</div>
+    <div class="reg-badge" style="color:rgba(255,255,255,0.45);">Registered · Kasese District Local Government</div>
   </div>
 </footer>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-  const API = 'https://drive-1-r8nr.onrender.com';
-  const GOOGLE_CLIENT_ID = '304984836974-0o5rdilg1pdvg3almd5js4b42je8p6e3.apps.googleusercontent.com';
+  // Policy dataset: title, description, driveUrl, icon, badge
+  const policies = [
+    { title: "Anti-Fraud Policy", desc: "Measures to prevent, detect, and respond to fraudulent activities. Zero-tolerance approach ensuring donor funds and assets are safeguarded.", driveUrl: "https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing", icon: "🔒", badge: "Fraud Prevention" },
+    { title: "Anti-Fraud & Anti-Corruption", desc: "Comprehensive framework addressing corruption risks, bribery, and unethical conduct across all BARWODA operations.", driveUrl: "https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing", icon: "⚖️", badge: "Integrity" },
+    { title: "Code of Conduct", desc: "Ethical standards for staff, volunteers, board members, and partners — promoting respect, dignity, and professionalism.", driveUrl: "https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing", icon: "📜", badge: "Ethics" },
+    { title: "Constitution", desc: "Governing document of BARWODA — legal framework, membership guidelines, and operational principles.", driveUrl: "https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing", icon: "📖", badge: "Foundation" },
+    { title: "Finance & Administration", desc: "Financial controls, budgeting procedures, procurement, and administrative regulations for transparency and accountability.", driveUrl: "https://drive.google.com/file/d/1YcHynszf6OpRYbyz7GM9ZdmEOF9RJY0c/view?usp=sharing", icon: "💰", badge: "Financial" },
+    { title: "Fixed Asset Policy", desc: "Management, depreciation, and disposal of organizational assets. Ensures efficient use of resources.", driveUrl: "https://drive.google.com/file/d/1AN_RA_jtrRO1ARnV3YroxBIr7IaJvVLH/view?usp=sharing", icon: "🏢", badge: "Asset Mgmt" },
+    { title: "Human Resource Policy", desc: "Staff recruitment, welfare, code of discipline, performance management, and equal opportunity guidelines.", driveUrl: "https://drive.google.com/file/d/1K4--pl00bwAFTLxq3jAG2yslRagBQwEu/view?usp=sharing", icon: "👥", badge: "HR" },
+    { title: "Procurement Policy", desc: "Transparent bidding, vendor selection, and procurement processes to prevent conflicts of interest.", driveUrl: "https://drive.google.com/file/d/1yvGd4h7xs8TBV7jx9jmOkFa5oT5mCaLS/view?usp=sharing", icon: "📦", badge: "Procurement" },
+    { title: "Risk Management Policy", desc: "Identifying, assessing, and mitigating operational, financial, and programmatic risks.", driveUrl: "https://drive.google.com/file/d/19vj_sm4hlVyBbB1IwrR0UeLDzdT2YPfe/view?usp=sharing", icon: "⚠️", badge: "Risk" },
+    { title: "Safeguarding Policy", desc: "Protection of children, vulnerable adults, and community members from abuse, exploitation, and harassment.", driveUrl: "https://drive.google.com/file/d/1OochJoi7o955MzuDK9nfW1IfZzqI0dnA/view?usp=sharing", icon: "🛡️", badge: "Safeguarding" },
+    { title: "Whistleblower Policy", desc: "Confidential reporting mechanism for misconduct, fraud, or abuse. Protection against retaliation.", driveUrl: "https://drive.google.com/file/d/1ZBgnPO9BKRyS3FsECyl6z1Ixd4qNwnyQ/view?usp=sharing", icon: "📢", badge: "Whistleblower" }
+  ];
 
-  let currentToken = null, currentUser = null, currentFolderId = null;
-  let currentFiles = [], currentFolders = [], currentPreviewFileId = null;
-  let folderHistory = [{ id: null, name: 'My Drive' }];
+  function renderPolicyCards() {
+    const container = document.getElementById('policyGrid');
+    if (!container) return;
+    container.innerHTML = '';
+    policies.forEach(policy => {
+      const card = document.createElement('a');
+      card.href = policy.driveUrl;
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.className = "policy-card reveal";
+      card.innerHTML = `
+        <div class="thumbnail">
+          <div class="doc-icon" style="font-size:68px;">${policy.icon}</div>
+          <div class="badge">${policy.badge}</div>
+        </div>
+        <div class="policy-info">
+          <div class="policy-title">${policy.title}</div>
+          <div class="policy-desc">${policy.desc}</div>
+          <div class="policy-meta">
+            <span class="drive-link">Open PDF →</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
 
-  const $ = id => document.getElementById(id);
+  // reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
 
-  // ── CURSOR ──
-  const cursor = $('cursor'), ring = $('cursor-ring');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=(mx-5)+'px'; cursor.style.top=(my-5)+'px'; });
-  (function animRing(){ rx+=(mx-rx-18)*0.12; ry+=(my-ry-18)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
-  document.querySelectorAll('a,button,.file-card,.folder-card,.nav-item-side').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{ cursor.style.transform='scale(2.5)'; ring.style.transform='scale(1.4)'; ring.style.borderColor='var(--accent)'; });
-    el.addEventListener('mouseleave',()=>{ cursor.style.transform='scale(1)'; ring.style.transform='scale(1)'; ring.style.borderColor='rgba(45,122,79,0.4)'; });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // cursor & navbar
+  const cursor = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; cursor.style.left = (mx - 5) + 'px'; cursor.style.top = (my - 5) + 'px'; });
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  const interactive = document.querySelectorAll('a, button, .policy-card');
+  interactive.forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2.5)'; ring.style.transform = 'scale(1.4)'; ring.style.borderColor = 'var(--accent)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.borderColor = 'rgba(45,122,79,0.4)'; });
   });
+  window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); });
 
-  // ── NAV SCROLL ──
-  window.addEventListener('scroll', () => {
-    $('navbar').classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  // ── MOBILE MENU ──
+  // mobile menu
   let menuOpen = false;
-  $('hamburgerBtn').addEventListener('click', () => {
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  function closeMobile() { menuOpen = false; mobileMenu.classList.remove('open'); const spans = document.querySelectorAll('.hamburger span'); spans[0].style.transform = ''; spans[1].style.opacity = '1'; spans[2].style.transform = ''; }
+  hamburger.addEventListener('click', () => {
     menuOpen = !menuOpen;
-    $('mobileMenu').classList.toggle('open', menuOpen);
+    mobileMenu.classList.toggle('open', menuOpen);
     const spans = document.querySelectorAll('.hamburger span');
-    if (menuOpen) { spans[0].style.transform='rotate(45deg) translate(5px,5px)'; spans[1].style.opacity='0'; spans[2].style.transform='rotate(-45deg) translate(5px,-5px)'; }
-    else { spans.forEach(s => { s.style.transform=''; s.style.opacity='1'; }); }
+    if (menuOpen) { spans[0].style.transform = 'rotate(45deg) translate(5px,5px)'; spans[1].style.opacity = '0'; spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)'; }
+    else { spans[0].style.transform = ''; spans[1].style.opacity = '1'; spans[2].style.transform = ''; }
   });
-  function closeMobile() { menuOpen=false; $('mobileMenu').classList.remove('open'); document.querySelectorAll('.hamburger span').forEach(s=>{ s.style.transform=''; s.style.opacity='1'; }); }
-  function toggleMobileSub(id) { const item=$(id); const exp=item.classList.contains('expanded'); document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('expanded')); if(!exp) item.classList.add('expanded'); }
+  window.closeMobile = closeMobile;
 
-  // ── AUTH TABS ──
-  document.querySelectorAll('.auth-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      const t = tab.dataset.tab;
-      document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
-      tab.classList.add('active');
-      document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
-      $(`${t}-form`).classList.add('active');
-      $('auth-alert').classList.remove('active');
-    });
-  });
+  // ensure active link highlight
+  renderPolicyCards();
 
-  function showAuthAlert(msg, type) {
-    const el = $('auth-alert');
-    el.textContent = msg;
-    el.className = `alert alert-${type} active`;
-    setTimeout(() => el.classList.remove('active'), 5000);
-  }
-
-  function showAlert(msg, type) {
-    const d = document.createElement('div');
-    d.className = `alert alert-${type}`;
-    d.textContent = msg;
-    $('alerts-container').appendChild(d);
-    setTimeout(() => d.remove(), 4000);
-  }
-
-  // ── LOGIN ──
-  $('login-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const email = $('login-email').value, password = $('login-password').value;
-    showAuthAlert('Signing in…', 'success');
-    try {
-      const fd = new URLSearchParams();
-      fd.append('username', email); fd.append('password', password); fd.append('grant_type', 'password');
-      const r = await fetch(`${API}/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: fd });
-      if (!r.ok) { const e=await r.json(); throw new Error(e.detail||'Invalid credentials'); }
-      const data = await r.json(); currentToken = data.access_token;
-      const ur = await fetch(`${API}/users/me/`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-      if (!ur.ok) throw new Error('Failed to get user info');
-      currentUser = await ur.json();
-      saveSession(); showApp(); loadStorageInfo(); loadFiles();
-      showAlert('Welcome to BARWODA Document Centre!', 'success');
-    } catch(e) { showAuthAlert(e.message, 'error'); }
-  });
-
-  // ── REGISTER ──
-  $('register-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const fullName=$('reg-name').value, email=$('reg-email').value, password=$('reg-password').value;
-    if (password.length < 6) { showAuthAlert('Password must be at least 6 characters', 'error'); return; }
-    showAuthAlert('Creating your account…', 'success');
-    try {
-      const r = await fetch(`${API}/users/`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, full_name: fullName, password }) });
-      if (!r.ok) { const e=await r.json(); throw new Error(e.detail||'Registration failed'); }
-      showAuthAlert('Account created! You can now sign in.', 'success');
-      document.querySelector('[data-tab="login"]').click();
-    } catch(e) { showAuthAlert(e.message, 'error'); }
-  });
-
-  // ── GOOGLE ──
-  async function handleGoogleCredential(response) {
-    try {
-      const r = await fetch(`${API}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
-      if (!r.ok) { const e=await r.json(); throw new Error(e.detail||'Google auth failed'); }
-      const d = await r.json();
-      currentToken = d.access_token; currentUser = d.user;
-      saveSession(); showApp(); loadStorageInfo(); loadFiles();
-      showAlert('Google sign-in successful!', 'success');
-    } catch(e) { showAuthAlert(`Google sign-in failed: ${e.message}`, 'error'); }
-  }
-  function googleSignIn() {
-    if (!window.google?.accounts) { showAuthAlert('Google Sign-In unavailable.', 'error'); return; }
-    google.accounts.id.prompt();
-  }
-  $('google-login-btn').addEventListener('click', googleSignIn);
-  $('google-reg-btn').addEventListener('click', googleSignIn);
-  window.addEventListener('load', () => {
-    if (window.google?.accounts) {
-      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential });
-    }
-  });
-
-  // ── LOGOUT ──
-  $('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('bw_token'); localStorage.removeItem('bw_user');
-    currentToken = null; currentUser = null; folderHistory = [{ id: null, name: 'My Drive' }];
-    $('auth-overlay').classList.remove('hidden');
-    $('user-strip').style.display = 'none';
-    $('app-body').style.display = 'none';
-  });
-
-  // ── SESSION ──
-  function saveSession() {
-    localStorage.setItem('bw_token', currentToken);
-    localStorage.setItem('bw_user', JSON.stringify(currentUser));
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedToken = localStorage.getItem('bw_token');
-    const savedUser = localStorage.getItem('bw_user');
-    if (savedToken && savedUser) {
-      try { currentToken = savedToken; currentUser = JSON.parse(savedUser); showApp(); loadStorageInfo(); loadFiles(); }
-      catch(e) { localStorage.removeItem('bw_token'); localStorage.removeItem('bw_user'); }
-    }
-  });
-
-  function showApp() {
-    $('auth-overlay').classList.add('hidden');
-    $('user-strip').style.display = 'flex';
-    $('app-body').style.display = 'flex';
-    if (currentUser) {
-      $('user-name-display').textContent = currentUser.full_name;
-      const initials = currentUser.full_name.split(' ').map(n=>n[0]).join('').toUpperCase();
-      $('user-avatar').textContent = initials || 'BA';
-      if (currentUser.auth_provider === 'google') $('user-avatar').style.background = 'linear-gradient(135deg,#4285f4,#34a853)';
-    }
-  }
-
-  // ── SIDEBAR NAV ──
-  document.querySelectorAll('.nav-item-side[data-section]').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item-side').forEach(i=>i.classList.remove('active'));
-      item.classList.add('active');
-      if (item.dataset.section === 'files') loadFiles(currentFolderId);
-    });
-  });
-
-  function handleQuickFolder(name) {
-    document.querySelectorAll('.nav-item-side').forEach(i=>i.classList.remove('active'));
-    showAlert(`Searching for "${name}" folder…`, 'success');
-    searchDocs(name);
-  }
-
-  // ── STORAGE ──
-  async function loadStorageInfo() {
-    try {
-      const r = await fetch(`${API}/storage/info`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-      if (!r.ok) return;
-      const d = await r.json();
-      const pct = Math.min(d.percentage, 100);
-      const usedGB = (d.used/1024/1024/1024).toFixed(2);
-      const limitGB = (d.limit/1024/1024/1024).toFixed(0);
-      $('storage-bar').style.width = `${pct}%`;
-      $('storage-pct').textContent = `${Math.round(pct)}%`;
-      $('storage-detail').textContent = `${usedGB} GB of ${limitGB} GB`;
-    } catch(e) {}
-  }
-
-  // ── LOAD FILES ──
-  async function loadFiles(folderId = null) {
-    currentFolderId = folderId;
-    $('loading-spinner').style.display = 'block';
-    $('files-content').style.display = 'none';
-    try {
-      const fParam = folderId ? `parent_id=${folderId}` : `parent_id=null`;
-      const fiParam = folderId ? `folder_id=${folderId}` : `folder_id=null`;
-      const [fr, ffr] = await Promise.all([
-        fetch(`${API}/folders?${fParam}`, { headers: { 'Authorization': `Bearer ${currentToken}` } }),
-        fetch(`${API}/files?${fiParam}`, { headers: { 'Authorization': `Bearer ${currentToken}` } })
-      ]);
-      if (fr.status === 401 || ffr.status === 401) { $('logout-btn').click(); return; }
-      if (!fr.ok) throw new Error('Failed to load folders');
-      if (!ffr.ok) throw new Error('Failed to load files');
-      currentFolders = await fr.json(); currentFiles = await ffr.json();
-      if (folderId) {
-        try {
-          const info = await fetch(`${API}/folders/${folderId}`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-          if (info.ok) { const f=await info.json(); updateBreadcrumb(folderId, f.name); }
-        } catch(_) {}
-      } else { updateBreadcrumb(null, 'My Drive'); }
-      renderFiles();
-    } catch(e) { showAlert(e.message, 'error'); }
-    finally { $('loading-spinner').style.display='none'; $('files-content').style.display='block'; }
-  }
-
-  function updateBreadcrumb(folderId, name) {
-    if (folderId) {
-      const idx = folderHistory.findIndex(f=>f.id===folderId);
-      if (idx !== -1) folderHistory = folderHistory.slice(0, idx+1);
-      else folderHistory.push({ id: folderId, name });
-    } else { folderHistory = [{ id: null, name: 'My Drive' }]; }
-    const bc = $('breadcrumb');
-    bc.innerHTML = '';
-    folderHistory.forEach((folder, i) => {
-      if (i > 0) { const sep=document.createElement('span'); sep.className='crumb-sep'; sep.textContent='/'; bc.appendChild(sep); }
-      const c = document.createElement('span');
-      c.className = `crumb${i===folderHistory.length-1?' active':''}`;
-      c.textContent = folder.name;
-      if (i < folderHistory.length-1) c.addEventListener('click', ()=>loadFiles(folder.id));
-      bc.appendChild(c);
-    });
-  }
-
-  function getFileIcon(mime) {
-    if (!mime) return 'fa-file';
-    if (mime.startsWith('image/')) return 'fa-file-image';
-    if (mime.startsWith('video/')) return 'fa-file-video';
-    if (mime.startsWith('audio/')) return 'fa-file-audio';
-    if (mime.includes('pdf')) return 'fa-file-pdf';
-    if (mime.includes('word')||mime.includes('document')) return 'fa-file-word';
-    if (mime.includes('excel')||mime.includes('spreadsheet')) return 'fa-file-excel';
-    if (mime.includes('zip')||mime.includes('compressed')) return 'fa-file-zipper';
-    return 'fa-file-lines';
-  }
-
-  function renderFiles() {
-    const fc = $('files-content');
-    fc.innerHTML = '';
-    if (!currentFolders.length && !currentFiles.length) {
-      fc.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>Nothing here yet</h3><p>Upload your first document or create a new folder to get started.</p></div>`;
-      return;
-    }
-    const grid = document.createElement('div'); grid.className = 'files-grid';
-    currentFolders.forEach(folder => {
-      const el = document.createElement('div'); el.className = 'folder-card';
-      el.innerHTML = `<i class="fas fa-folder item-icon folder-icon-color"></i><div class="item-name" title="${esc(folder.name)}">${esc(folder.name)}</div><div class="item-meta">${folder.folder_count||0} folders · ${folder.file_count||0} files</div><div class="item-actions"><button class="act-btn" data-action="open" data-id="${folder.id}" title="Open"><i class="fas fa-arrow-right"></i></button><button class="act-btn danger" data-action="del-folder" data-id="${folder.id}" title="Delete"><i class="fas fa-trash"></i></button></div>`;
-      grid.appendChild(el);
-    });
-    currentFiles.forEach(file => {
-      const icon = getFileIcon(file.mime_type);
-      const el = document.createElement('div'); el.className = 'file-card';
-      el.innerHTML = `<i class="fas ${icon} item-icon file-icon-color"></i><div class="item-name" title="${esc(file.original_filename)}">${esc(file.original_filename)}</div><div class="item-meta">${fmtSize(file.file_size)}</div><div class="item-actions"><button class="act-btn" data-action="preview" data-id="${file.id}" title="Preview"><i class="fas fa-eye"></i></button><button class="act-btn" data-action="download" data-id="${file.id}" title="Download"><i class="fas fa-download"></i></button><button class="act-btn danger" data-action="del-file" data-id="${file.id}" title="Delete"><i class="fas fa-trash"></i></button></div>`;
-      grid.appendChild(el);
-    });
-    fc.appendChild(grid);
-    bindItemEvents();
-    // re-attach cursor events
-    document.querySelectorAll('.file-card,.folder-card,.act-btn').forEach(el=>{
-      el.addEventListener('mouseenter',()=>{ cursor.style.transform='scale(2.5)'; ring.style.transform='scale(1.4)'; ring.style.borderColor='var(--accent)'; });
-      el.addEventListener('mouseleave',()=>{ cursor.style.transform='scale(1)'; ring.style.transform='scale(1)'; ring.style.borderColor='rgba(45,122,79,0.4)'; });
-    });
-  }
-
-  function bindItemEvents() {
-    document.querySelectorAll('[data-action="open"]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();loadFiles(parseInt(b.dataset.id));}));
-    document.querySelectorAll('[data-action="preview"]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();previewFile(parseInt(b.dataset.id));}));
-    document.querySelectorAll('[data-action="download"]').forEach(b=>b.addEventListener('click',async e=>{e.stopPropagation();await downloadFile(parseInt(b.dataset.id));}));
-    document.querySelectorAll('[data-action="del-file"]').forEach(b=>b.addEventListener('click',async e=>{e.stopPropagation();if(confirm('Delete this document?'))await deleteFile(parseInt(b.dataset.id));}));
-    document.querySelectorAll('[data-action="del-folder"]').forEach(b=>b.addEventListener('click',async e=>{e.stopPropagation();if(confirm('Delete this folder and all its contents?'))await deleteFolder(parseInt(b.dataset.id));}));
-    document.querySelectorAll('.folder-card').forEach(card=>{
-      const open = card.querySelector('[data-action="open"]');
-      if (open) card.addEventListener('click',e=>{if(!e.target.closest('.item-actions'))loadFiles(parseInt(open.dataset.id));});
-    });
-  }
-
-  // ── UPLOAD ──
-  $('upload-btn').addEventListener('click', ()=>$('file-input').click());
-  $('file-input').addEventListener('change', e=>uploadFiles(e.target.files));
-  $('upload-zone').addEventListener('click', ()=>$('file-input').click());
-  $('upload-zone').addEventListener('dragover', e=>{e.preventDefault();$('upload-zone').classList.add('dragover');});
-  $('upload-zone').addEventListener('dragleave', ()=>$('upload-zone').classList.remove('dragover'));
-  $('upload-zone').addEventListener('drop', e=>{e.preventDefault();$('upload-zone').classList.remove('dragover');if(e.dataTransfer.files.length)uploadFiles(e.dataTransfer.files);});
-
-  async function uploadFiles(fileList) {
-    if (!fileList?.length) return;
-    showAlert(`Uploading ${fileList.length} file${fileList.length>1?'s':''}…`, 'success');
-    for (let f of fileList) {
-      if (f.size > 10*1024*1024*1024) { showAlert(`"${f.name}" exceeds 10 GB limit`, 'error'); continue; }
-      const fd = new FormData(); fd.append('file', f);
-      let url = `${API}/files/upload`; if (currentFolderId) url += `?folder_id=${currentFolderId}`;
-      try {
-        const r = await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${currentToken}` }, body: fd });
-        if (!r.ok) { const e=await r.json(); throw new Error(e.detail||`Failed to upload "${f.name}"`); }
-      } catch(e) { showAlert(e.message, 'error'); }
-    }
-    showAlert('Upload complete!', 'success');
-    loadFiles(currentFolderId); loadStorageInfo();
-  }
-
-  // ── NEW FOLDER ──
-  $('new-folder-btn').addEventListener('click', ()=>{ $('folder-name-input').value=''; showModal('folder-modal'); });
-  $('folder-form').addEventListener('submit', async e=>{
-    e.preventDefault();
-    const name = $('folder-name-input').value.trim();
-    if (!name) return;
-    try {
-      const r = await fetch(`${API}/folders/`, { method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentToken}`}, body:JSON.stringify({name,parent_id:currentFolderId}) });
-      if (!r.ok) { const e=await r.json(); throw new Error(e.detail||'Failed to create folder'); }
-      hideModal('folder-modal'); showAlert('Folder created', 'success'); loadFiles(currentFolderId);
-    } catch(e) { showAlert(e.message, 'error'); }
-  });
-
-  // ── PREVIEW ──
-  async function previewFile(fileId) {
-    currentPreviewFileId = fileId;
-    try {
-      const r = await fetch(`${API}/files/${fileId}`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-      if (!r.ok) throw new Error('Failed to load file');
-      const file = await r.json();
-      $('preview-title').textContent = esc(file.original_filename);
-      const pc = $('preview-content'); pc.innerHTML = '';
-      $('download-btn').onclick = ()=>{ if(file.download_url) window.open(file.download_url,'_blank'); };
-      $('share-btn').onclick = ()=>toggleShare(fileId, !file.is_public);
-      $('share-btn').innerHTML = file.is_public ? '<i class="fas fa-lock"></i> Make Private' : '<i class="fas fa-share"></i> Make Public';
-      $('delete-preview-btn').onclick = ()=>{ if(confirm('Delete this document?')){ deleteFile(fileId); hideModal('preview-modal'); } };
-      if (file.mime_type?.startsWith('image/') && file.preview_url) {
-        const img=document.createElement('img'); img.src=file.preview_url; img.alt=file.original_filename; img.className='preview-img'; pc.appendChild(img);
-      } else if (file.mime_type?.includes('pdf') && file.preview_url) {
-        const em=document.createElement('embed'); em.src=file.preview_url; em.type='application/pdf'; em.className='preview-img'; em.style.cssText='width:100%;height:360px'; pc.appendChild(em);
-      } else {
-        const icon = getFileIcon(file.mime_type);
-        pc.innerHTML = `<div style="text-align:center;padding:32px 0"><i class="fas ${icon}" style="font-size:52px;color:var(--accent);margin-bottom:14px;display:block"></i></div>
-        <div class="preview-meta">
-          <div class="meta-row"><span>Name</span><span>${esc(file.original_filename)}</span></div>
-          <div class="meta-row"><span>Size</span><span>${fmtSize(file.file_size)}</span></div>
-          <div class="meta-row"><span>Type</span><span>${file.mime_type||'Unknown'}</span></div>
-          <div class="meta-row"><span>Uploaded</span><span>${new Date(file.created_at).toLocaleDateString()}</span></div>
-          <div class="meta-row"><span>Visibility</span><span>${file.is_public?'Public ✓':'Private 🔒'}</span></div>
-        </div>`;
-      }
-      showModal('preview-modal');
-    } catch(e) { showAlert('Failed to load document preview', 'error'); }
-  }
-
-  async function downloadFile(fileId) {
-    try {
-      const r = await fetch(`${API}/files/${fileId}/download`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-      if (!r.ok) throw new Error('Failed to get download URL');
-      const d = await r.json();
-      if (d.download_url) window.open(d.download_url, '_blank');
-      else throw new Error('No download URL');
-    } catch(e) { showAlert('Download failed', 'error'); }
-  }
-
-  async function deleteFile(fileId) {
-    try {
-      const r = await fetch(`${API}/files/${fileId}`, { method:'DELETE', headers:{'Authorization':`Bearer ${currentToken}`} });
-      if (!r.ok) throw new Error('Failed to delete');
-      showAlert('Document deleted', 'success'); loadFiles(currentFolderId); loadStorageInfo();
-    } catch(e) { showAlert('Failed to delete document', 'error'); }
-  }
-
-  async function deleteFolder(folderId) {
-    try {
-      const r = await fetch(`${API}/folders/${folderId}`, { method:'DELETE', headers:{'Authorization':`Bearer ${currentToken}`} });
-      if (!r.ok) throw new Error('Failed to delete folder');
-      showAlert('Folder deleted', 'success'); loadFiles(currentFolderId); loadStorageInfo();
-    } catch(e) { showAlert('Failed to delete folder', 'error'); }
-  }
-
-  async function toggleShare(fileId, isPublic) {
-    try {
-      const r = await fetch(`${API}/files/${fileId}/share`, { method:'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentToken}`}, body:JSON.stringify({is_public:isPublic}) });
-      if (!r.ok) throw new Error('Failed to update sharing');
-      showAlert(`Document is now ${isPublic?'public':'private'}`, 'success');
-      if (currentPreviewFileId===fileId) previewFile(fileId);
-    } catch(e) { showAlert('Failed to update sharing', 'error'); }
-  }
-
-  // ── SEARCH ──
-  let searchTimeout;
-  $('search-input').addEventListener('input', ()=>{
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(()=>{
-      const q = $('search-input').value.trim();
-      q ? searchDocs(q) : loadFiles(currentFolderId);
-    }, 500);
-  });
-
-  async function searchDocs(query) {
-    try {
-      const r = await fetch(`${API}/search?query=${encodeURIComponent(query)}`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
-      if (!r.ok) throw new Error('Search failed');
-      const files = await r.json();
-      const fc = $('files-content'); fc.innerHTML = '';
-      if (!files.length) {
-        fc.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-magnifying-glass"></i></div><h3>No results found</h3><p>Nothing matched "${esc(query)}"</p></div>`;
-        return;
-      }
-      const hdr=document.createElement('div'); hdr.style.cssText='font-size:13px;color:var(--text-muted);margin-bottom:16px;font-weight:500'; hdr.textContent=`${files.length} result${files.length!==1?'s':''} for "${query}"`; fc.appendChild(hdr);
-      const grid=document.createElement('div'); grid.className='files-grid';
-      files.forEach(file=>{
-        const icon=getFileIcon(file.mime_type);
-        const el=document.createElement('div'); el.className='file-card';
-        el.innerHTML=`<i class="fas ${icon} item-icon file-icon-color"></i><div class="item-name" title="${esc(file.original_filename)}">${esc(file.original_filename)}</div><div class="item-meta">${fmtSize(file.file_size)}</div><div class="item-actions"><button class="act-btn" data-action="preview" data-id="${file.id}"><i class="fas fa-eye"></i></button><button class="act-btn" data-action="download" data-id="${file.id}"><i class="fas fa-download"></i></button></div>`;
-        grid.appendChild(el);
-      });
-      fc.appendChild(grid);
-      bindItemEvents();
-    } catch(e) { showAlert('Search failed', 'error'); }
-  }
-
-  // ── MODALS ──
-  function showModal(id) { $(id).classList.add('active'); }
-  function hideModal(id) { $(id).classList.remove('active'); }
-  document.querySelectorAll('.modal-close').forEach(btn=>btn.addEventListener('click',()=>hideModal(btn.dataset.modal)));
-  window.addEventListener('click',e=>{if(e.target.classList.contains('modal'))hideModal(e.target.id);});
-
-  // ── HELPERS ──
-  function fmtSize(bytes) {
-    if (!bytes) return '0 B';
-    const k=1024, s=['B','KB','MB','GB','TB'];
-    const i=Math.floor(Math.log(bytes)/Math.log(k));
-    return `${parseFloat((bytes/Math.pow(k,i)).toFixed(1))} ${s[i]}`;
-  }
-  function esc(text) { const d=document.createElement('div'); d.textContent=text; return d.innerHTML; }
+  // additional: manually trigger reveal on already visible
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('visible'); });
+  }, 200);
 </script>
 </body>
 </html>
