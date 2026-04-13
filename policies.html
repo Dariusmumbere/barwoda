@@ -3,16 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BARWODA — Policy Hub | Governance & Compliance</title>
+<title>BARWODA — Policies & Governance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
   :root {
     --bg: #faf8f4;
     --surface: #f4f1eb;
@@ -28,6 +22,9 @@
     --r: 2px;
   }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: 'Cabinet Grotesk', sans-serif;
     background: var(--bg);
@@ -36,425 +33,863 @@
     cursor: none;
   }
 
-  /* custom cursor */
-  #cursor {
-    position: fixed; width: 10px; height: 10px;
-    background: var(--accent); border-radius: 50%;
-    pointer-events: none; z-index: 9999;
-    transition: transform 0.15s ease, background 0.2s;
+  /* ── LOADER ─────────────────────────────────────────────── */
+  #page-loader {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 99999;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 24px;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
   }
-  #cursor-ring {
-    position: fixed; width: 36px; height: 36px;
-    border: 1px solid rgba(45,122,79,0.4); border-radius: 50%;
-    pointer-events: none; z-index: 9998;
-    transition: all 0.18s ease;
-  }
+  #page-loader.hide { opacity: 0; visibility: hidden; }
+  .loader-logo { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .loader-logo em { font-style: italic; color: var(--accent); }
+  .loader-spinner { width: 48px; height: 48px; border: 2px solid rgba(45,122,79,0.15); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.85s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-text { font-size: 12px; font-weight: 500; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ── CURSOR ─────────────────────────────────────────────── */
+  #cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.15s ease, background 0.2s; }
+  #cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(45,122,79,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transition: all 0.18s ease; }
+
+  /* ── BG GRID ─────────────────────────────────────────────── */
   .bg-grid {
     position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(45,122,79,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(45,122,79,0.04) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(45,122,79,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(45,122,79,0.04) 1px, transparent 1px);
     background-size: 72px 72px;
     pointer-events: none; z-index: 0;
   }
 
+  /* ── NAV ─────────────────────────────────────────────────── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     padding: 22px 56px;
     display: flex; align-items: center; justify-content: space-between;
     background: transparent; transition: all 0.4s ease;
   }
-  nav.scrolled {
-    padding: 14px 56px;
-    background: rgba(250,248,244,0.95);
-    backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 1px 0 rgba(45,122,79,0.08);
-  }
-  .nav-logo {
-    font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px;
-    letter-spacing: -0.3px; color: var(--text); text-decoration: none;
-  }
+  nav.scrolled { padding: 14px 56px; background: rgba(250,248,244,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); box-shadow: 0 1px 0 rgba(45,122,79,0.08); }
+  .nav-logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; letter-spacing: -0.3px; color: var(--text); text-decoration: none; }
   .nav-logo em { font-style: italic; color: var(--accent); }
   .nav-links { display: flex; gap: 10px; list-style: none; align-items: center; }
-  .nav-item > a {
-    font-size: 17px; font-weight: 600;
-    color: #3a4a3e; text-decoration: none;
-    padding: 8px 16px; border-radius: var(--r);
-    transition: all 0.2s;
-  }
+  .nav-item { position: relative; }
+  .nav-item > a { font-size: 17px; font-weight: 600; color: #3a4a3e; text-decoration: none; letter-spacing: 0.2px; transition: color 0.2s; padding: 8px 16px; display: flex; align-items: center; gap: 5px; border-radius: var(--r); }
   .nav-item > a:hover { color: var(--accent); background: rgba(45,122,79,0.07); }
   .nav-item > a.active-link { color: var(--accent); }
-  .nav-cta {
-    padding: 9px 24px; background: var(--accent);
-    color: #fff; font-weight: 700; border: none; cursor: none;
-    border-radius: var(--r); transition: all 0.25s;
-    text-decoration: none;
-  }
+  .nav-item.has-dropdown > a::after { content: ''; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform 0.25s; display: inline-block; }
+  .nav-item.has-dropdown:hover > a::after { transform: rotate(225deg) translateY(-2px); }
+  .nav-item.has-dropdown > a::before { content: ''; position: absolute; bottom: -12px; left: 0; right: 0; height: 12px; background: transparent; }
+  .dropdown { position: absolute; top: calc(100% + 8px); left: 0; background: rgba(250,248,244,0.98); backdrop-filter: blur(20px); border: 1px solid var(--border2); min-width: 250px; padding: 8px 0; border-radius: 4px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px); transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease; box-shadow: 0 12px 32px rgba(45,122,79,0.12), 0 2px 8px rgba(0,0,0,0.06); }
+  .nav-item.has-dropdown:hover .dropdown, .nav-item.has-dropdown .dropdown:hover { opacity: 1; visibility: visible; pointer-events: all; transform: translateY(0); }
+  .dropdown a { display: flex; align-items: center; gap: 12px; padding: 10px 18px; font-size: 14px; font-weight: 500; color: #3a4a3e; text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; }
+  .dropdown a:hover { color: var(--accent); background: rgba(45,122,79,0.06); border-left-color: var(--accent); }
+  .dropdown-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+  .dropdown-divider { height: 1px; background: var(--border); margin: 6px 12px; }
+  .dropdown-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); padding: 6px 18px 4px; }
+  .nav-cta { padding: 9px 24px; background: var(--accent); color: #fff; font-family: 'Cabinet Grotesk', sans-serif; font-size: 14px; font-weight: 700; border: none; cursor: none; border-radius: var(--r); transition: all 0.25s; letter-spacing: 0.2px; margin-left: 12px; text-decoration: none; display: inline-block; }
   .nav-cta:hover { background: #236640; transform: translateY(-1px); }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; z-index: 1001; }
-  .hamburger span { width: 22px; height: 1.5px; background: var(--text); transition: 0.3s; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; z-index: 1001; position: relative; }
+  .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: all 0.3s; }
 
-  /* mobile menu (simplified) */
-  .mobile-menu {
-    position: fixed; inset: 0; background: rgba(250,248,244,0.98); backdrop-filter: blur(20px);
-    z-index: 998; padding: 88px 0 40px; transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-    overflow-y: auto;
+  /* ── HERO ─────────────────────────────────────────────────── */
+  .policies-hero {
+    position: relative;
+    padding: 160px 56px 100px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    z-index: 1;
   }
-  .mobile-menu.open { transform: translateX(0); }
-  .mobile-nav-link {
-    display: block; padding: 18px 28px; font-family: 'Fraunces', serif;
-    font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none;
+  .policies-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(45,122,79,0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .mobile-cta-wrap { padding: 28px; margin-top: auto; }
-  .mobile-cta { display: block; background: var(--accent); color: #fff; padding: 16px; text-align: center; border-radius: var(--r); text-decoration: none; }
+  .hero-inner { max-width: 760px; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.7s 0.1s ease forwards; }
+  .hero-eyebrow-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .policies-hero h1 { font-family: 'Fraunces', serif; font-size: clamp(48px, 6vw, 84px); font-weight: 700; line-height: 0.97; letter-spacing: -2px; margin-bottom: 28px; opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards; }
+  .policies-hero h1 em { font-style: italic; color: var(--accent); }
+  .policies-hero p { font-size: 18px; font-weight: 300; color: var(--text-muted); line-height: 1.75; max-width: 520px; opacity: 0; animation: fadeUp 0.7s 0.3s ease forwards; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; padding: 10px 18px; background: rgba(45,122,79,0.07); border: 1px solid var(--border2); border-radius: var(--r); font-size: 13px; font-weight: 600; color: var(--accent); opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
-  /* policy hub hero */
-  .policy-hero {
-    position: relative; min-height: 50vh;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; z-index: 1; padding: 140px 32px 80px;
-    background: linear-gradient(120deg, rgba(45,122,79,0.04) 0%, rgba(26,107,92,0.02) 100%);
-  }
-  .policy-hero h1 {
-    font-family: 'Fraunces', serif; font-size: clamp(48px, 7vw, 80px);
-    font-weight: 700; letter-spacing: -2px;
-  }
-  .policy-hero h1 em { font-style: italic; color: var(--accent); }
-  .policy-hero p { max-width: 640px; margin: 24px auto 0; font-size: 18px; color: var(--text-muted); font-weight: 300; }
+  /* ── MARQUEE ─────────────────────────────────────────────── */
+  .marquee-wrap { position: relative; z-index: 1; padding: 18px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(45,122,79,0.04); overflow: hidden; }
+  .marquee-track { display: flex; gap: 56px; width: max-content; animation: marquee 28s linear infinite; }
+  .marquee-item { display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; }
+  .marquee-item::before { content:''; width:4px; height:4px; background:var(--accent); border-radius:50%; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-  /* policy grid */
+  /* ── POLICIES GRID ───────────────────────────────────────── */
   .policies-section {
-    padding: 60px 56px 100px;
-    max-width: 1400px; margin: 0 auto;
+    position: relative; z-index: 1;
+    padding: 100px 56px 120px;
   }
+  .policies-header { margin-bottom: 64px; }
+  .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+  .section-label::before { content:''; width:20px; height:1px; background:var(--accent); }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(36px, 4vw, 58px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.0; margin-bottom: 16px; }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-desc { font-size: 17px; font-weight: 300; color: var(--text-muted); line-height: 1.75; max-width: 520px; }
+
   .policies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 32px;
-    margin-top: 48px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
+
+  /* ── POLICY CARD ─────────────────────────────────────────── */
   .policy-card {
     background: #fff;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--r);
     overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 4px 14px rgba(45,122,79,0.05);
+    transition: all 0.35s ease;
+    cursor: none;
+    box-shadow: 0 2px 8px rgba(45,122,79,0.05);
     text-decoration: none;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    opacity: 0;
+    transform: translateY(24px);
   }
-  .policy-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--accent);
-    box-shadow: 0 20px 32px -12px rgba(45,122,79,0.2);
-  }
-  .thumbnail {
-    background: var(--surface2);
+  .policy-card.visible { opacity: 1; transform: translateY(0); }
+  .policy-card:hover { border-color: var(--border2); transform: translateY(-5px); box-shadow: 0 12px 32px rgba(45,122,79,0.14); }
+
+  .policy-thumb {
+    position: relative;
     height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Document preview thumbnail */
+  .doc-preview {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    background: #fff;
     position: relative;
     overflow: hidden;
-    border-bottom: 1px solid var(--border);
   }
-  .thumbnail .doc-icon {
-    font-size: 64px;
-    transition: transform 0.25s ease;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-  }
-  .policy-card:hover .thumbnail .doc-icon {
-    transform: scale(1.05);
-    color: var(--accent);
-  }
-  .badge {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+  .doc-preview-header {
     background: var(--accent);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 40px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    backdrop-filter: blur(2px);
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .policy-info {
-    padding: 24px 24px 28px;
+  .doc-preview-logo { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .doc-preview-logo em { font-style: italic; color: rgba(255,255,255,0.75); }
+  .doc-preview-body { flex: 1; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .doc-line { height: 6px; background: rgba(45,122,79,0.12); border-radius: 3px; }
+  .doc-line.wide { width: 85%; }
+  .doc-line.med { width: 65%; }
+  .doc-line.short { width: 45%; }
+  .doc-line.title { height: 9px; width: 75%; background: rgba(45,122,79,0.22); margin-bottom: 6px; }
+  .doc-icon-overlay {
+    position: absolute; bottom: 12px; right: 12px;
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(45,122,79,0.3);
+    transition: transform 0.3s;
   }
-  .policy-title {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text);
-    line-height: 1.25;
-  }
-  .policy-desc {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    font-weight: 300;
-    margin-bottom: 20px;
-  }
-  .policy-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--accent2);
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-    margin-top: 4px;
-  }
-  .drive-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: gap 0.2s;
-  }
-  .drive-link:hover { gap: 10px; color: var(--accent2); }
+  .policy-card:hover .doc-icon-overlay { transform: scale(1.1) rotate(5deg); }
 
-  footer {
+  .policy-hover-overlay {
+    position: absolute; inset: 0;
+    background: rgba(45,122,79,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  .policy-card:hover .policy-hover-overlay { background: rgba(45,122,79,0.08); }
+  .open-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: rgba(255,255,255,0.95);
+    padding: 7px 14px; border-radius: 2px;
+    border: 1px solid var(--border2);
+    opacity: 0; transform: translateY(6px); transition: all 0.3s;
+  }
+  .policy-card:hover .open-label { opacity: 1; transform: translateY(0); }
+
+  .policy-info { padding: 22px 24px 24px; }
+  .policy-number { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .policy-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; line-height: 1.25; }
+  .policy-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; font-weight: 300; margin-bottom: 16px; }
+  .policy-footer { display: flex; align-items: center; justify-content: space-between; }
+  .policy-tag { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--r); background: var(--surface); }
+  .policy-arrow {
+    width: 32px; height: 32px;
+    background: var(--accent-light);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    color: var(--accent); font-size: 14px;
+  }
+  .policy-card:hover .policy-arrow { background: var(--accent); color: #fff; transform: rotate(45deg); }
+
+  /* Color variants per card */
+  .policy-card:nth-child(1) .doc-preview-header { background: #2d7a4f; }
+  .policy-card:nth-child(2) .doc-preview-header { background: #1a6b5c; }
+  .policy-card:nth-child(3) .doc-preview-header { background: #c05a2e; }
+  .policy-card:nth-child(4) .doc-preview-header { background: #2d5a7a; }
+  .policy-card:nth-child(5) .doc-preview-header { background: #6b2d7a; }
+  .policy-card:nth-child(6) .doc-preview-header { background: #7a4f2d; }
+  .policy-card:nth-child(7) .doc-preview-header { background: #2d7a6b; }
+  .policy-card:nth-child(8) .doc-preview-header { background: #4f7a2d; }
+  .policy-card:nth-child(9) .doc-preview-header { background: #7a2d4f; }
+  .policy-card:nth-child(10) .doc-preview-header { background: #2d4f7a; }
+  .policy-card:nth-child(11) .doc-preview-header { background: #5a7a2d; }
+
+  .policy-card:nth-child(1) .doc-icon-overlay { background: #2d7a4f; }
+  .policy-card:nth-child(2) .doc-icon-overlay { background: #1a6b5c; }
+  .policy-card:nth-child(3) .doc-icon-overlay { background: #c05a2e; }
+  .policy-card:nth-child(4) .doc-icon-overlay { background: #2d5a7a; }
+  .policy-card:nth-child(5) .doc-icon-overlay { background: #6b2d7a; }
+  .policy-card:nth-child(6) .doc-icon-overlay { background: #7a4f2d; }
+  .policy-card:nth-child(7) .doc-icon-overlay { background: #2d7a6b; }
+  .policy-card:nth-child(8) .doc-icon-overlay { background: #4f7a2d; }
+  .policy-card:nth-child(9) .doc-icon-overlay { background: #7a2d4f; }
+  .policy-card:nth-child(10) .doc-icon-overlay { background: #2d4f7a; }
+  .policy-card:nth-child(11) .doc-icon-overlay { background: #5a7a2d; }
+
+  /* ── BOTTOM CTA STRIP ────────────────────────────────────── */
+  .bottom-strip {
+    position: relative; z-index: 1;
     background: #1a3829;
+    padding: 72px 56px;
+    text-align: center;
     border-top: 1px solid rgba(255,255,255,0.1);
-    padding: 60px 56px 36px;
-    position: relative;
-    z-index: 1;
   }
-  .footer-top {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 56px;
-    margin-bottom: 56px;
-  }
-  .footer-logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; color: #fff; display: block; margin-bottom: 14px; }
-  .footer-logo em { font-style: italic; color: #7ed9a0; }
-  .footer-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; max-width: 260px; }
-  .footer-col h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 18px; }
-  .footer-col ul { list-style: none; }
-  .footer-col ul li { margin-bottom: 10px; }
-  .footer-col ul a { font-size: 14px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
-  .footer-col ul a:hover { color: #7ed9a0; }
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 26px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .footer-copy { font-size: 13px; color: rgba(255,255,255,0.45); }
-  .footer-copy em { color: #7ed9a0; font-style: normal; }
+  .bottom-strip h3 { font-family: 'Fraunces', serif; font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; color: #fff; letter-spacing: -1px; margin-bottom: 14px; }
+  .bottom-strip h3 em { font-style: italic; color: #7ed9a0; }
+  .bottom-strip p { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; font-weight: 300; }
+  .strip-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-strip-primary { padding: 13px 30px; background: #7ed9a0; color: #1a3829; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 14px; border: none; border-radius: var(--r); cursor: none; text-decoration: none; transition: all 0.3s; }
+  .btn-strip-primary:hover { background: #9fe8b8; transform: translateY(-2px); }
+  .btn-strip-outline { padding: 13px 30px; background: transparent; border: 1px solid rgba(255,255,255,0.22); color: rgba(255,255,255,0.75); font-family: 'Cabinet Grotesk', sans-serif; font-size: 14px; font-weight: 500; border-radius: var(--r); cursor: none; text-decoration: none; transition: all 0.3s; }
+  .btn-strip-outline:hover { border-color: #7ed9a0; color: #7ed9a0; }
 
+  /* ── MOBILE MENU ─────────────────────────────────────────── */
+  .mobile-menu { position: fixed; inset: 0; background: rgba(250,248,244,0.98); backdrop-filter: blur(20px); z-index: 998; padding: 88px 0 40px; display: flex; flex-direction: column; overflow-y: auto; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.22,1,0.36,1); }
+  .mobile-menu.open { transform: translateX(0); }
+  .mobile-nav-item { border-bottom: 1px solid var(--border); }
+  .mobile-nav-link { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.5px; font-style: italic; transition: color 0.2s; background: none; border: none; width: 100%; text-align: left; cursor: pointer; }
+  .mobile-nav-link:hover { color: var(--accent); }
+  .mobile-chevron { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform 0.3s, color 0.2s; flex-shrink: 0; margin-top: -4px; }
+  .mobile-nav-item.expanded .mobile-chevron { transform: rotate(225deg); margin-top: 4px; }
+  .mobile-nav-item.expanded .mobile-nav-link { color: var(--accent); }
+  .mobile-submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1); background: rgba(45,122,79,0.03); }
+  .mobile-nav-item.expanded .mobile-submenu { max-height: 600px; }
+  .mobile-sub-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); padding: 12px 28px 6px; }
+  .mobile-submenu a { display: flex; align-items: center; gap: 12px; padding: 11px 28px 11px 36px; font-size: 15px; font-weight: 500; color: #3a5a44; text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; font-style: normal; font-family: 'Cabinet Grotesk', sans-serif; }
+  .mobile-submenu a:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(45,122,79,0.05); }
+  .mobile-sub-divider { height: 1px; background: var(--border); margin: 6px 28px; }
+  .mobile-cta-wrap { padding: 28px 28px 0; margin-top: auto; }
+  .mobile-cta { display: block; width: 100%; padding: 16px 36px; background: var(--accent); color: #fff; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 16px; border: none; border-radius: var(--r); text-align: center; text-decoration: none; transition: all 0.25s; }
+  .mobile-cta:hover { background: #236640; }
+
+  /* ── FOOTER ──────────────────────────────────────────────── */
+  footer { background: #1a3829; border-top: 1px solid rgba(255,255,255,0.1); padding: 60px 56px 36px; position: relative; z-index: 1; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 56px; margin-bottom: 56px; }
+  .footer-logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; margin-bottom: 14px; display: block; color: #fff; }
+  .footer-logo em { font-style: italic; color: #7ed9a0; }
+  .footer-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 22px; max-width: 260px; font-weight: 300; }
+  .footer-social { display: flex; gap: 10px; }
+  .social-link { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.3s; border-radius: var(--r); }
+  .social-link:hover { border-color: #7ed9a0; color: #7ed9a0; }
+  .footer-col h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; color: #fff; margin-bottom: 18px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a { font-size: 14px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; font-weight: 300; }
+  .footer-col ul a:hover { color: #7ed9a0; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 26px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 13px; color: rgba(255,255,255,0.45); }
+  .footer-copy em { font-style: normal; color: #7ed9a0; }
+  .reg-badge { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 0.3px; }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────── */
   @media (max-width: 1100px) {
+    .policies-grid { grid-template-columns: repeat(2, 1fr); }
     .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
-    .policies-section { padding: 40px 32px 80px; }
   }
   @media (max-width: 768px) {
-    nav { padding: 16px 22px; }
+    nav { padding: 16px 22px; } nav.scrolled { padding: 12px 22px; }
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
-    .policies-section { padding: 30px 20px 60px; }
-    .policy-hero { padding: 120px 24px 60px; }
+    .policies-hero { padding: 120px 22px 72px; }
+    .policies-section { padding: 60px 22px 80px; }
+    .policies-grid { grid-template-columns: 1fr; }
+    .bottom-strip { padding: 56px 22px; }
     .footer-top { grid-template-columns: 1fr; }
-    .footer-bottom { flex-direction: column; text-align: center; }
+    .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
   }
-  .reveal { opacity: 0; transform: translateY(24px); transition: all 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
+
+<div id="page-loader">
+  <div class="loader-logo">BAR<em>WODA</em></div>
+  <div class="loader-spinner"></div>
+  <div class="loader-text">Loading Experience</div>
+</div>
 
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div class="bg-grid"></div>
 
+<!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">BAR<em>WODA</em></a>
+  <a href="index.html" class="nav-logo">BAR<em>WODA</em></a>
   <ul class="nav-links">
-    <li class="nav-item"><a href="#" class="active-link">Policies Hub</a></li>
-    <li class="nav-item"><a href="#about-barwoda">About BARWODA</a></li>
-    <li class="nav-item"><a href="#governance">Governance</a></li>
-    <li class="nav-item"><a href="#contact-footer">Contact</a></li>
+    <li class="nav-item"><a href="index.html">Home</a></li>
+    <li class="nav-item has-dropdown"><a href="#about">About</a>
+      <div class="dropdown">
+        <div class="dropdown-label">Organization</div>
+        <a href="who.html"><span class="dropdown-icon">🌿</span>Who We Are</a>
+        <a href="goals.html"><span class="dropdown-icon">🎯</span>Our Vision &amp; Goals</a>
+        <a href="journey.html"><span class="dropdown-icon">📅</span>Our Journey</a>
+        <a href="policies.html"><span class="dropdown-icon">📄</span>BARWODA POLICIES</a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-label">Leadership</div>
+        <a href="founders.html"><span class="dropdown-icon">👥</span>Founders &amp; Members</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="index.html#impact">Impact</a></li>
+    <li class="nav-item has-dropdown"><a href="index.html#programs">Programs</a>
+      <div class="dropdown">
+        <div class="dropdown-label">Education</div>
+        <a href="adult.html"><span class="dropdown-icon">✍️</span>Adult Literacy</a>
+        <a href="technical.html"><span class="dropdown-icon">📚</span>Skills &amp; Vocational Training</a>
+        <a href="children.html"><span class="dropdown-icon">👶</span>Children Support</a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-label">Community</div>
+        <a href="human.html"><span class="dropdown-icon">⚖️</span>Human Rights &amp; GBV</a>
+        <a href="health.html"><span class="dropdown-icon">🏥</span>MaliMali Health Centre</a>
+        <a href="environment.html"><span class="dropdown-icon">🌱</span>Environmental Conservation</a>
+        <a href="livestock.html"><span class="dropdown-icon">🐷</span>Livestock &amp; Farming</a>
+        <a href="menstrual.html"><span class="dropdown-icon">🪡</span>Menstrual Health</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="index.html#partners">Partners</a></li>
+    <li class="nav-item"><a href="gallery.html">Gallery</a></li>
+    <li class="nav-item"><a href="index.html#contact">Contact</a></li>
   </ul>
-  <a href="#contact-footer" class="nav-cta">Support Us</a>
+  <a href="donate.html" class="nav-cta">Support Us</a>
   <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
+<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#" class="mobile-nav-link" onclick="closeMobile()">Policies Hub</a>
-  <a href="#about-barwoda" class="mobile-nav-link" onclick="closeMobile()">About BARWODA</a>
-  <a href="#governance" class="mobile-nav-link" onclick="closeMobile()">Governance</a>
-  <div class="mobile-cta-wrap"><a href="#contact-footer" class="mobile-cta" onclick="closeMobile()">Support Us →</a></div>
-</div>
-
-<!-- Hero policy section -->
-<div class="policy-hero">
-  <div>
-    <h1>Integrity &<br><em>Governance Hub</em></h1>
-    <p>BARWODA operates with full transparency, accountability, and ethical standards. Access our official policies, codes, and constitutional documents — all in one place.</p>
-  </div>
-</div>
-
-<!-- policy grid with thumbnails and drive links -->
-<section class="policies-section" id="policies-list">
-  <div class="section-label" style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-    <span style="width:28px; height:1px; background:var(--accent);"></span>
-    <span style="font-size:12px; font-weight:700; letter-spacing:2px; color:var(--accent); text-transform:uppercase;">BARWODA Official Documents</span>
-  </div>
-  <h2 class="section-title" style="font-family:'Fraunces',serif; font-size:clamp(36px,4vw,52px);">Policies & <em>Frameworks</em></h2>
-  <div class="policies-grid" id="policyGrid"></div>
-</section>
-
-<section id="about-barwoda" style="background:var(--surface); padding:80px 56px;">
-  <div class="reveal" style="max-width:900px; margin:0 auto; text-align:center;">
-    <div class="section-label" style="justify-content:center;">Our Commitment</div>
-    <h2 class="section-title" style="font-size:clamp(34px,5vw,48px);">Accountability & <em>Transparency</em></h2>
-    <p style="font-size:17px; color:var(--text-muted); line-height:1.7; margin-top:24px;">BARWODA — Bayira Rural Women's Development Association is fully registered under Kasese District Local Government. Our policies align with international best practices in anti-fraud, anti-corruption, safeguarding, risk management, and governance. Every document here represents our promise to donors, partners, and the communities we serve: integrity above all.</p>
-  </div>
-</section>
-
-<section id="governance" style="padding:80px 56px; background:var(--bg);">
-  <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
-    <div>
-      <div class="section-label">Governance Structure</div>
-      <h2 class="section-title">Ethical <em>Operations</em></h2>
-      <p class="section-desc" style="margin-bottom:24px;">Our constitution, code of conduct, whistleblower mechanism, and financial regulations ensure every decision prioritizes the welfare of rural women and children. All policies are reviewed annually by the executive committee and board of advisors.</p>
-      <ul style="list-style:none; margin-top:20px;">
-        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Zero tolerance for fraud & corruption</li>
-        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Whistleblower protection active</li>
-        <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"><span style="background:var(--accent-light); width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">✓</span> Risk management & safeguarding first</li>
-      </ul>
-    </div>
-    <div style="background:var(--surface); padding:36px; border-radius:var(--r); border:1px solid var(--border);">
-      <div style="font-family:'Fraunces',serif; font-size:38px; font-weight:700; color:var(--accent); margin-bottom:12px;">28+ years</div>
-      <div style="font-size:16px; color:var(--text-muted);">Serving with integrity since 1998 — BARWODA remains a pillar of trust in Western Uganda.</div>
+  <div class="mobile-nav-item" id="mobileAbout">
+    <button class="mobile-nav-link" onclick="toggleMobileSub('mobileAbout')">About<span class="mobile-chevron"></span></button>
+    <div class="mobile-submenu">
+      <div class="mobile-sub-label">Organization</div>
+      <a href="who.html" onclick="closeMobile()"><span>🌿</span> Who We Are</a>
+      <a href="goals.html" onclick="closeMobile()"><span>🎯</span> Our Vision &amp; Goals</a>
+      <a href="journey.html" onclick="closeMobile()"><span>📅</span> Our Journey</a>
+      <a href="policies.html" onclick="closeMobile()"><span>📄</span> BARWODA Policies</a>
+      <div class="mobile-sub-divider"></div>
+      <div class="mobile-sub-label">Leadership</div>
+      <a href="founders.html" onclick="closeMobile()"><span>👥</span> Founders &amp; Members</a>
     </div>
   </div>
+  <div class="mobile-nav-item"><a href="index.html#impact" class="mobile-nav-link plain-link" onclick="closeMobile()">Impact</a></div>
+  <div class="mobile-nav-item" id="mobilePrograms">
+    <button class="mobile-nav-link" onclick="toggleMobileSub('mobilePrograms')">Programs<span class="mobile-chevron"></span></button>
+    <div class="mobile-submenu">
+      <div class="mobile-sub-label">Education</div>
+      <a href="adult.html" onclick="closeMobile()"><span>✍️</span> Adult Literacy</a>
+      <a href="technical.html" onclick="closeMobile()"><span>📚</span> Skills &amp; Vocational Training</a>
+      <a href="children.html" onclick="closeMobile()"><span>👶</span> Children Support</a>
+      <div class="mobile-sub-divider"></div>
+      <div class="mobile-sub-label">Community</div>
+      <a href="human.html" onclick="closeMobile()"><span>⚖️</span> Human Rights &amp; GBV</a>
+      <a href="health.html" onclick="closeMobile()"><span>🏥</span> MaliMali Health Centre</a>
+      <a href="environment.html" onclick="closeMobile()"><span>🌱</span> Environmental Conservation</a>
+      <a href="livestock.html" onclick="closeMobile()"><span>🐷</span> Livestock &amp; Farming</a>
+      <a href="menstrual.html" onclick="closeMobile()"><span>🪡</span> Menstrual Health</a>
+    </div>
+  </div>
+  <div class="mobile-nav-item"><a href="index.html#partners" class="mobile-nav-link plain-link" onclick="closeMobile()">Partners</a></div>
+  <div class="mobile-nav-item"><a href="gallery.html" class="mobile-nav-link plain-link" onclick="closeMobile()">Gallery</a></div>
+  <div class="mobile-nav-item"><a href="index.html#contact" class="mobile-nav-link plain-link" onclick="closeMobile()">Contact</a></div>
+  <div class="mobile-cta-wrap"><a href="index.html#contact" class="mobile-cta" onclick="closeMobile()">Support Us →</a></div>
+</div>
+
+<!-- HERO -->
+<div class="policies-hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Governance &amp; Transparency</div>
+    <h1>BARWODA<br><em>Policies</em></h1>
+    <p>Our institutional framework that guides ethical conduct, accountability, and effective governance across all BARWODA programs and operations.</p>
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      11 Governance Documents · Click any card to open
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Anti-Fraud</span>
+    <span class="marquee-item">Code of Conduct</span>
+    <span class="marquee-item">Human Resources</span>
+    <span class="marquee-item">Finance &amp; Administration</span>
+    <span class="marquee-item">Risk Management</span>
+    <span class="marquee-item">Procurement</span>
+    <span class="marquee-item">Safeguarding</span>
+    <span class="marquee-item">Whistleblower</span>
+    <span class="marquee-item">Fixed Asset</span>
+    <span class="marquee-item">Constitution</span>
+    <span class="marquee-item">Anti-Fraud</span>
+    <span class="marquee-item">Code of Conduct</span>
+    <span class="marquee-item">Human Resources</span>
+    <span class="marquee-item">Finance &amp; Administration</span>
+    <span class="marquee-item">Risk Management</span>
+    <span class="marquee-item">Procurement</span>
+    <span class="marquee-item">Safeguarding</span>
+    <span class="marquee-item">Whistleblower</span>
+    <span class="marquee-item">Fixed Asset</span>
+    <span class="marquee-item">Constitution</span>
+  </div>
+</div>
+
+<!-- POLICIES GRID -->
+<section class="policies-section">
+  <div class="policies-header">
+    <div class="section-label">Official Documents</div>
+    <h2 class="section-title">Our <em>Governance</em> Framework</h2>
+    <p class="section-desc">Access all BARWODA policy documents. Each document outlines the standards and principles that underpin our work and commitment to the communities we serve.</p>
+  </div>
+
+  <div class="policies-grid">
+
+    <!-- 1 Anti Fraud Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">🛡️</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 01</div>
+        <div class="policy-name">Anti-Fraud Policy</div>
+        <div class="policy-desc">Guidelines for preventing, detecting, and responding to fraudulent activities within the organization.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Integrity</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 2 Anti Fraud and Anti-Corruption -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line med"></div>
+          </div>
+          <div class="doc-icon-overlay">⚖️</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 02</div>
+        <div class="policy-name">Anti-Fraud &amp; Anti-Corruption</div>
+        <div class="policy-desc">Comprehensive framework addressing fraud prevention and anti-corruption measures across all operations.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Compliance</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 3 Code of Conduct -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">📋</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 03</div>
+        <div class="policy-name">Code of Conduct</div>
+        <div class="policy-desc">Behavioral standards and ethical expectations for all members, staff, and volunteers of BARWODA.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Ethics</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 4 Constitution -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+          </div>
+          <div class="doc-icon-overlay">🏛️</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 04</div>
+        <div class="policy-name">Constitution</div>
+        <div class="policy-desc">The foundational legal document establishing BARWODA's purpose, structure, governance, and operational mandate.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Governance</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 5 Finance and Administration -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1YcHynszf6OpRYbyz7GM9ZdmEOF9RJY0c/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">💰</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 05</div>
+        <div class="policy-name">Finance &amp; Administration</div>
+        <div class="policy-desc">Financial management procedures, administrative controls, and accountability standards for all organizational resources.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Finance</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 6 Fixed Asset Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1AN_RA_jtrRO1ARnV3YroxBIr7IaJvVLH/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">🏢</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 06</div>
+        <div class="policy-name">Fixed Asset Policy</div>
+        <div class="policy-desc">Rules governing the acquisition, use, maintenance, and disposal of fixed assets owned by the organization.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Assets</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 7 Human Resource -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1K4--pl00bwAFTLxq3jAG2yslRagBQwEu/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">👥</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 07</div>
+        <div class="policy-name">Human Resource Policy</div>
+        <div class="policy-desc">Staff recruitment, employment conditions, performance management, and human resource development guidelines.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">HR</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 8 Procurement Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1yvGd4h7xs8TBV7jx9jmOkFa5oT5mCaLS/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+          </div>
+          <div class="doc-icon-overlay">📦</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 08</div>
+        <div class="policy-name">Procurement Policy</div>
+        <div class="policy-desc">Transparent and competitive procurement procedures ensuring value for money in all organizational purchases.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Procurement</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 9 Risk Management Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/19vj_sm4hlVyBbB1IwrR0UeLDzdT2YPfe/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+          </div>
+          <div class="doc-icon-overlay">⚠️</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 09</div>
+        <div class="policy-name">Risk Management Policy</div>
+        <div class="policy-desc">Identification, assessment, and mitigation strategies for organizational risks to ensure resilient operations.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Risk</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 10 Safeguarding Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1OochJoi7o955MzuDK9nfW1IfZzqI0dnA/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+          </div>
+          <div class="doc-icon-overlay">🛡️</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 10</div>
+        <div class="policy-name">Safeguarding Policy</div>
+        <div class="policy-desc">Protecting beneficiaries, especially children and vulnerable persons, from harm, abuse, and exploitation.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Protection</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 11 Whistleblower Policy -->
+    <a class="policy-card" href="https://drive.google.com/file/d/1ZBgnPO9BKRyS3FsECyl6z1Ixd4qNwnyQ/view?usp=sharing" target="_blank" rel="noopener">
+      <div class="policy-thumb">
+        <div class="doc-preview">
+          <div class="doc-preview-header"><span class="doc-preview-logo">BAR<em>WODA</em></span></div>
+          <div class="doc-preview-body">
+            <div class="doc-line title"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line short"></div>
+            <div class="doc-line wide"></div>
+            <div class="doc-line med"></div>
+          </div>
+          <div class="doc-icon-overlay">📢</div>
+        </div>
+        <div class="policy-hover-overlay"><span class="open-label">Open Document ↗</span></div>
+      </div>
+      <div class="policy-info">
+        <div class="policy-number">Policy 11</div>
+        <div class="policy-name">Whistleblower Policy</div>
+        <div class="policy-desc">Safe and confidential reporting mechanisms for concerns about misconduct, fraud, or policy violations.</div>
+        <div class="policy-footer">
+          <span class="policy-tag">Reporting</span>
+          <span class="policy-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
 </section>
 
-<footer id="contact-footer">
+<!-- BOTTOM CTA STRIP -->
+<div class="bottom-strip">
+  <h3>Committed to <em>Transparency</em></h3>
+  <p>BARWODA upholds the highest standards of accountability. These documents reflect our commitment to ethical, transparent, and community-centered governance.</p>
+  <div class="strip-buttons">
+    <a href="index.html#contact" class="btn-strip-primary">Get in Touch →</a>
+    <a href="index.html" class="btn-strip-outline">Back to Home</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
   <div class="footer-top">
     <div class="footer-brand">
       <span class="footer-logo">BAR<em>WODA</em></span>
-      <p class="footer-desc">Bayira Rural Women's Development Association — transforming lives through education, livelihoods, health, and human rights since 1998.</p>
+      <p class="footer-desc">Bayira Rural Women's Development Association — transforming lives through education, livelihoods, health, and human rights in Western Uganda since 1998.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link">𝕏</a>
+        <a href="#" class="social-link">in</a>
+        <a href="#" class="social-link">f</a>
+        <a href="#" class="social-link">✉</a>
+      </div>
     </div>
-    <div class="footer-col"><h4>Programs</h4><ul><li><a href="#">Adult Literacy</a></li><li><a href="#">Skills Training</a></li><li><a href="#">Human Rights</a></li><li><a href="#">Health Services</a></li></ul></div>
-    <div class="footer-col"><h4>Organization</h4><ul><li><a href="#">About BARWODA</a></li><li><a href="#">Our Impact</a></li><li><a href="#">Partners</a></li><li><a href="#">Policies Hub</a></li></ul></div>
-    <div class="footer-col"><h4>Location</h4><ul><li><a href="#">Kisinga Sub-county</a></li><li><a href="#">Bukonzo, Kasese</a></li><li><a href="#">Western Uganda</a></li><li><a href="#">MaliMali Clinic</a></li></ul></div>
+    <div class="footer-col"><h4>Programs</h4><ul>
+      <li><a href="adult.html">Adult Literacy</a></li>
+      <li><a href="technical.html">Skills Training</a></li>
+      <li><a href="human.html">Human Rights</a></li>
+      <li><a href="health.html">Health Services</a></li>
+      <li><a href="environment.html">Environmental</a></li>
+      <li><a href="livestock.html">Livestock</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Organization</h4><ul>
+      <li><a href="who.html">About BARWODA</a></li>
+      <li><a href="index.html#impact">Our Impact</a></li>
+      <li><a href="journey.html">Our Journey</a></li>
+      <li><a href="policies.html">Policies</a></li>
+      <li><a href="index.html#partners">Partners</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Location</h4><ul>
+      <li><a href="#">Kajwenge Centre</a></li>
+      <li><a href="#">Kisinga Sub-county</a></li>
+      <li><a href="#">Bukonzo, Kasese</a></li>
+      <li><a href="#">Western Uganda</a></li>
+      <li><a href="#">MaliMali Clinic</a></li>
+    </ul></div>
   </div>
   <div class="footer-bottom">
     <div class="footer-copy">© 2026 <em>BARWODA</em> · Bayira Rural Women's Development Association</div>
-    <div class="reg-badge" style="color:rgba(255,255,255,0.45);">Registered · Kasese District Local Government</div>
+    <div class="reg-badge">Registered · Kasese District Local Government · Community Development Dept.</div>
   </div>
 </footer>
 
 <script>
-  // Policy dataset: title, description, driveUrl, icon, badge
-  const policies = [
-    { title: "Anti-Fraud Policy", desc: "Measures to prevent, detect, and respond to fraudulent activities. Zero-tolerance approach ensuring donor funds and assets are safeguarded.", driveUrl: "https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing", icon: "🔒", badge: "Fraud Prevention" },
-    { title: "Anti-Fraud & Anti-Corruption", desc: "Comprehensive framework addressing corruption risks, bribery, and unethical conduct across all BARWODA operations.", driveUrl: "https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing", icon: "⚖️", badge: "Integrity" },
-    { title: "Code of Conduct", desc: "Ethical standards for staff, volunteers, board members, and partners — promoting respect, dignity, and professionalism.", driveUrl: "https://drive.google.com/file/d/1NEFA504VNjdNYjv_sA1QiVsYbCNYt4Ww/view?usp=sharing", icon: "📜", badge: "Ethics" },
-    { title: "Constitution", desc: "Governing document of BARWODA — legal framework, membership guidelines, and operational principles.", driveUrl: "https://drive.google.com/file/d/1tsrGu4IlHUek1BHkbFjkZJ83pi-lPv2d/view?usp=sharing", icon: "📖", badge: "Foundation" },
-    { title: "Finance & Administration", desc: "Financial controls, budgeting procedures, procurement, and administrative regulations for transparency and accountability.", driveUrl: "https://drive.google.com/file/d/1YcHynszf6OpRYbyz7GM9ZdmEOF9RJY0c/view?usp=sharing", icon: "💰", badge: "Financial" },
-    { title: "Fixed Asset Policy", desc: "Management, depreciation, and disposal of organizational assets. Ensures efficient use of resources.", driveUrl: "https://drive.google.com/file/d/1AN_RA_jtrRO1ARnV3YroxBIr7IaJvVLH/view?usp=sharing", icon: "🏢", badge: "Asset Mgmt" },
-    { title: "Human Resource Policy", desc: "Staff recruitment, welfare, code of discipline, performance management, and equal opportunity guidelines.", driveUrl: "https://drive.google.com/file/d/1K4--pl00bwAFTLxq3jAG2yslRagBQwEu/view?usp=sharing", icon: "👥", badge: "HR" },
-    { title: "Procurement Policy", desc: "Transparent bidding, vendor selection, and procurement processes to prevent conflicts of interest.", driveUrl: "https://drive.google.com/file/d/1yvGd4h7xs8TBV7jx9jmOkFa5oT5mCaLS/view?usp=sharing", icon: "📦", badge: "Procurement" },
-    { title: "Risk Management Policy", desc: "Identifying, assessing, and mitigating operational, financial, and programmatic risks.", driveUrl: "https://drive.google.com/file/d/19vj_sm4hlVyBbB1IwrR0UeLDzdT2YPfe/view?usp=sharing", icon: "⚠️", badge: "Risk" },
-    { title: "Safeguarding Policy", desc: "Protection of children, vulnerable adults, and community members from abuse, exploitation, and harassment.", driveUrl: "https://drive.google.com/file/d/1OochJoi7o955MzuDK9nfW1IfZzqI0dnA/view?usp=sharing", icon: "🛡️", badge: "Safeguarding" },
-    { title: "Whistleblower Policy", desc: "Confidential reporting mechanism for misconduct, fraud, or abuse. Protection against retaliation.", driveUrl: "https://drive.google.com/file/d/1ZBgnPO9BKRyS3FsECyl6z1Ixd4qNwnyQ/view?usp=sharing", icon: "📢", badge: "Whistleblower" }
-  ];
+  // Loader
+  window.addEventListener('load', () => { setTimeout(() => { document.getElementById('page-loader').classList.add('hide'); }, 1000); });
 
-  function renderPolicyCards() {
-    const container = document.getElementById('policyGrid');
-    if (!container) return;
-    container.innerHTML = '';
-    policies.forEach(policy => {
-      const card = document.createElement('a');
-      card.href = policy.driveUrl;
-      card.target = "_blank";
-      card.rel = "noopener noreferrer";
-      card.className = "policy-card reveal";
-      card.innerHTML = `
-        <div class="thumbnail">
-          <div class="doc-icon" style="font-size:68px;">${policy.icon}</div>
-          <div class="badge">${policy.badge}</div>
-        </div>
-        <div class="policy-info">
-          <div class="policy-title">${policy.title}</div>
-          <div class="policy-desc">${policy.desc}</div>
-          <div class="policy-meta">
-            <span class="drive-link">Open PDF →</span>
-          </div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
+  // Custom cursor
+  const cursor = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',(e)=>{ mx=e.clientX; my=e.clientY; cursor.style.left=(mx-5)+'px'; cursor.style.top=(my-5)+'px'; });
+  (function animateRing(){ rx+=(mx-rx-18)*0.12; ry+=(my-ry-18)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animateRing); })();
+  document.querySelectorAll('a,button,.policy-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ cursor.style.transform='scale(2.5)'; ring.style.transform='scale(1.4)'; ring.style.borderColor='var(--accent)'; });
+    el.addEventListener('mouseleave',()=>{ cursor.style.transform='scale(1)'; ring.style.transform='scale(1)'; ring.style.borderColor='rgba(45,122,79,0.4)'; });
+  });
 
-  // reveal on scroll
+  // Navbar scroll
+  window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50); });
+
+  // Mobile menu
+  let menuOpen = false;
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    document.getElementById('mobileMenu').classList.toggle('open', menuOpen);
+    const spans = document.querySelectorAll('.hamburger span');
+    if (menuOpen) { spans[0].style.transform='rotate(45deg) translate(5px,5px)'; spans[1].style.opacity='0'; spans[2].style.transform='rotate(-45deg) translate(5px,-5px)'; }
+    else { spans[0].style.transform=''; spans[1].style.opacity='1'; spans[2].style.transform=''; }
+  });
+  function closeMobile() { menuOpen=false; document.getElementById('mobileMenu').classList.remove('open'); document.querySelectorAll('.hamburger span').forEach(s=>{s.style.transform='';s.style.opacity='1';}); }
+  function toggleMobileSub(id) { const item=document.getElementById(id); const isExpanded=item.classList.contains('expanded'); document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('expanded')); if(!isExpanded)item.classList.add('expanded'); }
+
+  // Staggered card reveal
+  const cards = document.querySelectorAll('.policy-card');
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
+        const idx = Array.from(cards).indexOf(entry.target);
+        setTimeout(() => { entry.target.classList.add('visible'); }, idx * 80);
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // cursor & navbar
-  const cursor = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; cursor.style.left = (mx - 5) + 'px'; cursor.style.top = (my - 5) + 'px'; });
-  function animateRing() {
-    rx += (mx - rx - 18) * 0.12;
-    ry += (my - ry - 18) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-  const interactive = document.querySelectorAll('a, button, .policy-card');
-  interactive.forEach(el => {
-    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2.5)'; ring.style.transform = 'scale(1.4)'; ring.style.borderColor = 'var(--accent)'; });
-    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.borderColor = 'rgba(45,122,79,0.4)'; });
-  });
-  window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); });
-
-  // mobile menu
-  let menuOpen = false;
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  function closeMobile() { menuOpen = false; mobileMenu.classList.remove('open'); const spans = document.querySelectorAll('.hamburger span'); spans[0].style.transform = ''; spans[1].style.opacity = '1'; spans[2].style.transform = ''; }
-  hamburger.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    mobileMenu.classList.toggle('open', menuOpen);
-    const spans = document.querySelectorAll('.hamburger span');
-    if (menuOpen) { spans[0].style.transform = 'rotate(45deg) translate(5px,5px)'; spans[1].style.opacity = '0'; spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)'; }
-    else { spans[0].style.transform = ''; spans[1].style.opacity = '1'; spans[2].style.transform = ''; }
-  });
-  window.closeMobile = closeMobile;
-
-  // ensure active link highlight
-  renderPolicyCards();
-
-  // additional: manually trigger reveal on already visible
-  setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('visible'); });
-  }, 200);
+  }, { threshold: 0.08 });
+  cards.forEach(card => observer.observe(card));
 </script>
 </body>
 </html>
